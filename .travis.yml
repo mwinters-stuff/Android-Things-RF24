@@ -1,0 +1,27 @@
+language: android
+jdk: oraclejdk8
+#dist: trusty
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
+    - build-tools-25.0.2
+    - android-24
+    - extra-google-m2repository
+    - extra-android-m2repository
+addons:
+  sonarqube:
+    token:
+      secure: hi6m+7DFPlwWzFb2yRktTcIiyFOFvNbaHusTwrdQnQXFDQiZbLQ2S1ZlFQpwXwB6na2FOKQB5EqPjCLOA8SBkg2d0cK0YySEzun+dUdUKO0MDvNP3jvfv4Gnn+p5S3OnepP3JUtSF3bx0nflP/IfgyUuHtGJ/Kp8s6uroQdu1PJuuSYQACefWAvKUfxHk4kJaNRLkMm39ee5oM/E/+GMbIWqcEHO+nUafWOzYPGi8ZGSlCN+HMYkRbKrsr5qSRAvmBrebpXzO6QxyckXQtQbmeMa34eLV+1fL5RFXHmFkIfJeoskyU5px9OoxoBmwtj7o118ey+aLjT+gfAFjyA9IZfkkYLLdJ0YSKZMidBZZHOlW/wzm7cB/n7J0l0pksm+scGs/Wr911fPNPkXFeQoJYisr7+A+lxplBRGYEi1rHQ/sH6GM12+54u0j8jguEN8NhA9lQByx9fM7fsN+IZh0sSiIUvpIjsJg72IGrri6sVH+tGlgATNWtfeDG9ZQj0a7VK504QuLx5Olns9YIYxmreBdfvOlRH8dhfxmQH/L4WzsjoP470Fnozd/ci4lBHiNgmtBQL1EV5aSHPakL4l8bANAJNy/oU5dF/fpKPDF4dm0XcnOOyBVSP4tXUMl1LVlsbGLvRh9iTTmIg4kmfm9WT/8hrIMr5ztiWUCGt9T0o=
+script:
+  # other script steps might be done before running the actual SonarQube analysis
+  - ./gradlew assembleRelease
+  - ./gradlew test
+
+licenses:
+  - 'android-sdk-preview-license'
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'  
