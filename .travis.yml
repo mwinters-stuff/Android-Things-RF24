@@ -25,6 +25,7 @@ android:
     - extra-android-m2repository
 
 script:
+  - chmod +x travisndk.py
   - ./travisndk.py
   - ./gradlew assembleRelease
   - ./gradlew test
