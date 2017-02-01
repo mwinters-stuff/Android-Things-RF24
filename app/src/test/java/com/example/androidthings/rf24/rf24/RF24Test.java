@@ -11,13 +11,18 @@ import org.junit.runner.RunWith;
 import org.mockito.AdditionalMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -40,11 +45,18 @@ public class RF24Test {
 
   private List<String> spiDevices = new ArrayList<>();
 
-
   @Before
   public void setUp() throws Exception {
     spiDevices.add("SPI0");
     spiDevices.add("SPI1");
+  }
+
+  private byte[] createArray(){
+    byte[] b = new byte[33];
+    for(int i =0; i < 33; i++){
+      b[i] = (byte) 0;
+    }
+    return b;
 
   }
 
@@ -118,10 +130,36 @@ public class RF24Test {
     when(peripheralManagerServiceMock.getSpiBusList()).thenReturn(spiDevices);
     when(peripheralManagerServiceMock.openSpiDevice("SPI0")).thenReturn(spiDeviceMock);
 
+    byte[] bb_in = createArray();
+    byte[] bb_out = createArray();
+    bb_in[0] = (byte)0xff;
+
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        byte[] array = invocation.getArgument(1);
+        array[0] = (byte)0x10;
+        return null;
+      }
+    }).when(spiDeviceMock).transfer(aryEq(bb_in), aryEq(bb_out),eq(1));
+
+
+//            .thenAnswer(new Answer<byte[], byte[], Integer>(){
+//
+//      @Override
+//      public byte[] answer(InvocationOnMock invocation) throws Throwable {
+//        return new byte[0];
+//      }
+//
+//      void answer(byte[] tx, byte[] rx, Integer len){
+//        rx[0] = (byte) 10;
+//      }
+//    });
+
     InOrder inOrder = inOrder(spiDeviceMock, cePinMock);
 
     RF24 radio = new RF24(peripheralManagerServiceMock,cePinMock);
-    radio.getStatus();
+    assertEquals(0x10,radio.getStatus());
 
     // constructor calls.
     inOrder.verify(cePinMock).setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
@@ -138,8 +176,13 @@ public class RF24Test {
     inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
     inOrder.verify(spiDeviceMock).setBitsPerWord(8);
 
-    inOrder.verify(spiDeviceMock).transfer(aryEq(new byte[]{(byte)0xFF}), aryEq(new byte[]{(byte)0xFF}), 1);
+    byte[] b_in = createArray();
+    b_in[0] = (byte)0xff;
+    byte[] b_out = createArray();
+    b_out[0] = (byte) 0x10;
+    inOrder.verify(spiDeviceMock).transfer(aryEq(b_in), aryEq(b_out), eq(1) );
 
+    inOrder.verifyNoMoreInteractions();
   }
 
   @Test
