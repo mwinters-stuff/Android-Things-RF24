@@ -167,4 +167,3 @@ sub git_install {
 
 
 __PACKAGE__
-0

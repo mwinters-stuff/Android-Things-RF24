@@ -50,6 +50,7 @@ public class RF24 implements Closeable {
   private boolean pVariant;
   private byte[] pipe0ReadingAddress = new byte[5];
   private int txRxDelay;
+  private int spiFrequency;
 
 
   /**
@@ -71,6 +72,7 @@ public class RF24 implements Closeable {
     this.payloadSize = payloadSize;
     this.addrWidth = 5;
     this.pVariant = false;
+    this.spiFrequency = spiFrequency;
     this.dynamicPayloadsEnabled = false;
     pipe0ReadingAddress[0] = 0;
 
@@ -126,7 +128,7 @@ public class RF24 implements Closeable {
   void beginTransaction() throws IOException {
     //csn(false);
     device.setMode(SpiDevice.MODE0);
-    device.setFrequency(8000000);     // 16MHz
+    device.setFrequency(spiFrequency * 1000000);     // 16MHz
     device.setBitsPerWord(8);          // 8 BPW
   }
 

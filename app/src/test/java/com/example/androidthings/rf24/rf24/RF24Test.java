@@ -1,18 +1,47 @@
 package com.example.androidthings.rf24.rf24;
 
+import com.google.android.things.pio.Gpio;
+import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.SpiDevice;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by mathew on 31/01/17.
  * Copyright 2017 Mathew Winters
  */
+@RunWith(MockitoJUnitRunner.class)
 public class RF24Test {
+
+  @Mock
+  public PeripheralManagerService peripheralManagerServiceMock;
+
+  @Mock
+  public SpiDevice spiDeviceMock;
+
+  @Mock
+  public Gpio cePinMock;
+
+  private List<String> spiDevices = new ArrayList<>();
+
+
   @Before
   public void setUp() throws Exception {
+    spiDevices.add("SPI0");
+    spiDevices.add("SPI1");
 
   }
 
@@ -83,6 +112,29 @@ public class RF24Test {
 
   @Test
   public void getStatus() throws Exception {
+    when(peripheralManagerServiceMock.getSpiBusList()).thenReturn(spiDevices);
+    when(peripheralManagerServiceMock.openSpiDevice("SPI0")).thenReturn(spiDeviceMock);
+
+    InOrder inOrder = inOrder(spiDeviceMock, cePinMock);
+
+    RF24 radio = new RF24(peripheralManagerServiceMock,cePinMock);
+    radio.getStatus();
+
+    // constructor calls.
+    inOrder.verify(cePinMock).setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);
+
+    //Log.d(TAG,"construct");
+    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+    inOrder.verify(spiDeviceMock).setBitsPerWord(8);          // 8 BPW
+    inOrder.verify(spiDeviceMock).setBitJustification(false); // MSB first
+
+
+    // begin transaction
+    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
+
 
   }
 
