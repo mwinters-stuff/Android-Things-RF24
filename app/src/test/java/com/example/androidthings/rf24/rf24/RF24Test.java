@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -15,6 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.AdditionalMatchers.aryEq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -135,6 +138,7 @@ public class RF24Test {
     inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
     inOrder.verify(spiDeviceMock).setBitsPerWord(8);
 
+    inOrder.verify(spiDeviceMock).transfer(aryEq(new byte[]{(byte)0xFF}), aryEq(new byte[]{(byte)0xFF}), 1);
 
   }
 
