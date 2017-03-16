@@ -57,21 +57,21 @@ dependencies {
     provided 'com.google.android.things:androidthings:0.1-devpreview'
     annotationProcessor "org.androidannotations:androidannotations:4.2.0"
     compile "org.androidannotations:androidannotations-api:4.2.0"
-    compile "com.android.support:support-annotations:25.1.1"
-    compile 'com.google.guava:guava:20.0'
+    compile "com.android.support:support-annotations:24.2.1"
 
-    androidTestCompile "com.android.support:support-annotations:25.1.1"
+    androidTestCompile "com.android.support:support-annotations:24.2.1"
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
-    testCompile "com.android.support:support-annotations:25.1.1"
+    testCompile "com.android.support:support-annotations:24.2.1"
     testCompile 'com.android.support.test:runner:0.5'
     testCompile 'com.android.support.test:rules:0.5'
     testCompile 'org.mockito:mockito-core:2.6.3'
     //testCompile 'org.mockito:mockito-android:2.6.3'
 
 
+    compile project(path: ':librf24')
 }
 
 android.applicationVariants.all { variant ->

@@ -1,28 +1,39 @@
-/*
- * Copyright 2016, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+ext {
+    compileSdkVersion = 24
+    buildToolsVersion = "25.0.2"
+    targetSdkVersion = 24
+    minSdkVersion = 14
+    supportVersion = "24.2.1"
+    version = getTheVersion()
+    buildNumber = getTheBuildNumber()
+
+    bintrayRepo = 'maven'
+    publishedGroupId = 'nz.org.winters'
+    siteUrl = 'https://github.com/wintersandroid/Android-Things-RF24'
+    gitUrl = 'https://github.com/wintersandroid/Android-Things-RF24.git'
+
+    libraryVersion = getTheVersion()
+
+    developerId = 'wintersandroid'
+    developerName = 'Mathew Winters'
+    developerEmail = 'android@winters.org.nz'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+
+}
 
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
-
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -42,4 +53,37 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def static getBuildMajor(){
+    return 0;
+}
+
+def getTheVersion() {
+    def buildMajor = getBuildMajor();
+    def buildNumber = getTheBuildNumber();
+    if( buildNumber == 0)
+    {
+        return "${buildMajor}.${buildNumber}-SNAPSHOT";
+
+    }else{
+        return "${buildMajor}.${buildNumber}";
+    }
+
+}
+
+def getTheBuildNumber(){
+    return hasProperty('BUILD_NUMBER') ? BUILD_NUMBER.toInteger() : 0;
+}
+
+def getBintrayUser(){
+    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
+}
+
+def getBintrayApiKey(){
+    return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }

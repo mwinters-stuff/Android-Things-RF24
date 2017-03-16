@@ -1,4 +1,4 @@
-package com.example.androidthings.rf24.rf24;
+package nz.org.winters.android.libRF24;
 
 /**
  * Created by mathew on 20/01/17.
@@ -6,7 +6,7 @@ package com.example.androidthings.rf24.rf24;
  */
 
 @SuppressWarnings("unused")
-public enum nRF24L01 {
+enum nRF24L01 {
   CONFIG(0x00),
   EN_AA(0x01),
   EN_RXADDR(0x02),

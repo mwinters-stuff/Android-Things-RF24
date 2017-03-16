@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.example.androidthings.rf24.rf24.RF24;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
 
@@ -30,6 +29,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
+
+import nz.org.winters.android.libRF24.RF24;
 
 
 /**

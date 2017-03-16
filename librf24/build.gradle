@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+ext {
+    bintrayName = 'libRF24'
+    libraryName = 'RF24 Lib for Android Things'
+    artifact = "${bintrayName}"
+    libraryDescription = "${libraryName}"
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+
+        versionCode rootProject.ext.buildNumber
+        versionName rootProject.ext.version
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    provided 'com.google.android.things:androidthings:0.1-devpreview'
+    compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    compile 'com.google.guava:guava:20.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    testCompile 'com.android.support.test:runner:0.5'
+    testCompile 'com.android.support.test:rules:0.5'
+    testCompile 'org.mockito:mockito-core:2.6.3'
+
+}
+
+apply from: '../installv1.gradle'
+apply from: '../bintrayv1.gradle'
