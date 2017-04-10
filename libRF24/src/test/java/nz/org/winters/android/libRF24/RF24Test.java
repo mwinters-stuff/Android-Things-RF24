@@ -90,119 +90,119 @@ public class RF24Test {
 
   }
 
-  @Test
-  public void ce() throws Exception {
-    InOrder inOrder = Mockito.inOrder(cePinMock);
+//  @Test
+//  public void ce() throws Exception {
+//    InOrder inOrder = Mockito.inOrder(cePinMock);
+//
+//    radio.ce(false);
+//    radio.ce(true);
+//    radio.ce(true);
+//    radio.ce(false);
+//
+//    inOrder.verify(cePinMock).setValue(false);
+//    inOrder.verify(cePinMock, Mockito.times(2)).setValue(true);
+//    inOrder.verify(cePinMock).setValue(false);
+//
+//    inOrder.verifyNoMoreInteractions();
+//  }
+//
+//  @Test
+//  public void beginTransaction() throws Exception {
+//    InOrder inOrder = Mockito.inOrder(spiDeviceMock);
+//
+//    radio.beginTransaction();
+//
+//    // begin transaction
+//    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+//    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+//    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
+//    inOrder.verifyNoMoreInteractions();
+//
+//  }
 
-    radio.ce(false);
-    radio.ce(true);
-    radio.ce(true);
-    radio.ce(false);
+//  @Test
+//  public void readRegister() throws Exception {
+//
+//    byte[] bb_in = createArrayNOP(6);
+//    byte[] bb_out = createArray();
+//    bb_in[0] = (byte) (nRF24L01.R_REGISTER.i() | (nRF24L01.REGISTER_MASK.i() & nRF24L01.RX_ADDR_P0.i()));
+//
+//    Mockito.doAnswer(new Answer() {
+//      @Override
+//      public Object answer(InvocationOnMock invocation) throws Throwable {
+//        byte[] array = invocation.getArgument(1);
+//        array[0] = (byte)0x10;
+//        array[1] = (byte)0x11;
+//        array[2] = (byte)0x12;
+//        array[3] = (byte)0x13;
+//        array[4] = (byte)0x14;
+//        array[5] = (byte)0x15;
+//        return null;
+//      }
+//    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(6));
+//
+//    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
+//
+//    RF24.ReturnBuffer returnBuffer = radio.readRegister(nRF24L01.RX_ADDR_P0.i(),5);
+//
+//    assertEquals(0x10,returnBuffer.status);
+//
+//    // begin transaction
+//    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+//    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+//    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
+//
+//    byte[] b_in = createArrayNOP(6);
+//    b_in[0] = (byte)0x0a;
+//    byte[] b_out = createArray();
+//    b_out[0] = (byte)0x10;
+//    b_out[1] = (byte)0x11;
+//    b_out[2] = (byte)0x12;
+//    b_out[3] = (byte)0x13;
+//    b_out[4] = (byte)0x14;
+//    b_out[5] = (byte)0x15;
+//    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(6));
+//
+//    inOrder.verifyNoMoreInteractions();
+//
+//  }
 
-    inOrder.verify(cePinMock).setValue(false);
-    inOrder.verify(cePinMock, Mockito.times(2)).setValue(true);
-    inOrder.verify(cePinMock).setValue(false);
-
-    inOrder.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void beginTransaction() throws Exception {
-    InOrder inOrder = Mockito.inOrder(spiDeviceMock);
-
-    radio.beginTransaction();
-
-    // begin transaction
-    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
-    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
-    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
-    inOrder.verifyNoMoreInteractions();
-
-  }
-
-  @Test
-  public void readRegister() throws Exception {
-
-    byte[] bb_in = createArrayNOP(6);
-    byte[] bb_out = createArray();
-    bb_in[0] = (byte) (nRF24L01.R_REGISTER.i() | (nRF24L01.REGISTER_MASK.i() & nRF24L01.RX_ADDR_P0.i()));
-
-    Mockito.doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        byte[] array = invocation.getArgument(1);
-        array[0] = (byte)0x10;
-        array[1] = (byte)0x11;
-        array[2] = (byte)0x12;
-        array[3] = (byte)0x13;
-        array[4] = (byte)0x14;
-        array[5] = (byte)0x15;
-        return null;
-      }
-    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(6));
-
-    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
-
-    RF24.ReturnBuffer returnBuffer = radio.readRegister(nRF24L01.RX_ADDR_P0.i(),5);
-
-    assertEquals(0x10,returnBuffer.status);
-
-    // begin transaction
-    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
-    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
-    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
-
-    byte[] b_in = createArrayNOP(6);
-    b_in[0] = (byte)0x0a;
-    byte[] b_out = createArray();
-    b_out[0] = (byte)0x10;
-    b_out[1] = (byte)0x11;
-    b_out[2] = (byte)0x12;
-    b_out[3] = (byte)0x13;
-    b_out[4] = (byte)0x14;
-    b_out[5] = (byte)0x15;
-    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(6));
-
-    inOrder.verifyNoMoreInteractions();
-
-  }
-
-  @Test
-  public void readRegister1() throws Exception {
-    byte[] bb_in = createArrayNOP(2);
-    byte[] bb_out = createArray();
-    bb_in[0] = (byte) (nRF24L01.R_REGISTER.i() | (nRF24L01.REGISTER_MASK.i() & nRF24L01.RX_ADDR_P0.i()));
-
-    Mockito.doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        byte[] array = invocation.getArgument(1);
-        array[0] = (byte)0x10;
-        array[1] = (byte)0x11;
-        return null;
-      }
-    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(2));
-
-    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
-
-
-
-    assertEquals(0x11, radio.readRegister(nRF24L01.RX_ADDR_P0.i()));
-
-    // begin transaction
-    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
-    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
-    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
-
-    byte[] b_in = createArrayNOP(2);
-    b_in[0] = (byte)0x0a;
-    byte[] b_out = createArray();
-    b_out[0] = (byte)0x10;
-    b_out[1] = (byte)0x11;
-    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(2));
-
-    inOrder.verifyNoMoreInteractions();
-  }
+//  @Test
+//  public void readRegister1() throws Exception {
+//    byte[] bb_in = createArrayNOP(2);
+//    byte[] bb_out = createArray();
+//    bb_in[0] = (byte) (nRF24L01.R_REGISTER.i() | (nRF24L01.REGISTER_MASK.i() & nRF24L01.RX_ADDR_P0.i()));
+//
+//    Mockito.doAnswer(new Answer() {
+//      @Override
+//      public Object answer(InvocationOnMock invocation) throws Throwable {
+//        byte[] array = invocation.getArgument(1);
+//        array[0] = (byte)0x10;
+//        array[1] = (byte)0x11;
+//        return null;
+//      }
+//    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(2));
+//
+//    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
+//
+//
+//
+//    assertEquals(0x11, radio.readRegister(nRF24L01.RX_ADDR_P0.i()));
+//
+//    // begin transaction
+//    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+//    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+//    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
+//
+//    byte[] b_in = createArrayNOP(2);
+//    b_in[0] = (byte)0x0a;
+//    byte[] b_out = createArray();
+//    b_out[0] = (byte)0x10;
+//    b_out[1] = (byte)0x11;
+//    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(2));
+//
+//    inOrder.verifyNoMoreInteractions();
+//  }
 
   @Test
   public void writeRegister() throws Exception {
@@ -244,39 +244,39 @@ public class RF24Test {
 
   }
 
-  @Test
-  public void getStatus() throws Exception {
-
-    byte[] bb_in = createArray();
-    byte[] bb_out = createArray();
-    bb_in[0] = (byte)0xff;
-
-    Mockito.doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        byte[] array = invocation.getArgument(1);
-        array[0] = (byte)0x10;
-        return null;
-      }
-    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(1));
-
-    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
-
-    assertEquals(0x10,radio.getStatus());
-
-    // begin transaction
-    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
-    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
-    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
-
-    byte[] b_in = createArray();
-    b_in[0] = (byte)0xff;
-    byte[] b_out = createArray();
-    b_out[0] = (byte) 0x10;
-    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(1) );
-
-    inOrder.verifyNoMoreInteractions();
-  }
+//  @Test
+//  public void getStatus() throws Exception {
+//
+//    byte[] bb_in = createArray();
+//    byte[] bb_out = createArray();
+//    bb_in[0] = (byte)0xff;
+//
+//    Mockito.doAnswer(new Answer() {
+//      @Override
+//      public Object answer(InvocationOnMock invocation) throws Throwable {
+//        byte[] array = invocation.getArgument(1);
+//        array[0] = (byte)0x10;
+//        return null;
+//      }
+//    }).when(spiDeviceMock).transfer(AdditionalMatchers.aryEq(bb_in), AdditionalMatchers.aryEq(bb_out), ArgumentMatchers.eq(1));
+//
+//    InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
+//
+//    assertEquals(0x10,radio.getStatus());
+//
+//    // begin transaction
+//    inOrder.verify(spiDeviceMock).setMode(SpiDevice.MODE0);
+//    inOrder.verify(spiDeviceMock).setFrequency(16000000);     // 16MHz
+//    inOrder.verify(spiDeviceMock).setBitsPerWord(8);
+//
+//    byte[] b_in = createArray();
+//    b_in[0] = (byte)0xff;
+//    byte[] b_out = createArray();
+//    b_out[0] = (byte) 0x10;
+//    inOrder.verify(spiDeviceMock).transfer(AdditionalMatchers.aryEq(b_in), AdditionalMatchers.aryEq(b_out), ArgumentMatchers.eq(1) );
+//
+//    inOrder.verifyNoMoreInteractions();
+//  }
 
   @Test
   public void printStatus() throws Exception {
