@@ -30,7 +30,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 
-import nz.org.winters.android.libRF24.RF24;
+import nz.org.winters.android.libRF24.NativeRF24;
 
 
 /**
@@ -62,7 +62,8 @@ public class MainActivity extends Activity {
   @Pref
   AppPrefs_ appPrefs;
 
-  private Gpio cePin;
+  private static final int cePin = 22;
+  private static final int spiSpeed = 8000000;
   private Gpio ledPinRed;
 
   boolean stop = false;
@@ -76,7 +77,7 @@ public class MainActivity extends Activity {
       PeripheralManagerService peripheralManagerService = new PeripheralManagerService();
 
 
-      cePin = peripheralManagerService.openGpio("BCM22");
+      //cePin = peripheralManagerService.openGpio("BCM22");
       ledPinRed = peripheralManagerService.openGpio("BCM13");
       ledPinRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
       ledPinRed.setValue(false);
@@ -108,14 +109,15 @@ public class MainActivity extends Activity {
   }
 
   private void pingOutCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
 
-      radio.openWritingPipe(pipes[0].getBytes());
+      radio.openWritingPipe(pipes[0]);
       radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-      Log.d(TAG, radio.printDetails());
+    //  Log.d(TAG, radio.printDetails());
 
       byte counter = 1;
 
@@ -143,7 +145,7 @@ public class MainActivity extends Activity {
       }
     }
 
-  }
+
 
 
   static final String send_payload_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
@@ -151,15 +153,15 @@ public class MainActivity extends Activity {
   static final byte[][] dyn_pipes = {{(byte)0xE1,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}, {(byte)0xD2,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}};
 
   private void dynPairPong(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
-      radio.begin();
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
 
 
-      radio.openWritingPipe(dyn_pipes[1]);
+      radio.openWritingPipe(new String(dyn_pipes[1]));
       radio.openReadingPipe((byte) 1, dyn_pipes[0]);
-      Log.d(TAG, radio.printDetails());
+      //Log.d(TAG, radio.printDetails());
       radio.startListening();
 
       int nextPayloadSize = 4;
@@ -170,7 +172,7 @@ public class MainActivity extends Activity {
 
         if (radio.available()) {
           flipLED();
-          byte len = 0;
+          int len = 0;
           byte[] receive_payload = {};
           while (radio.available()) {
             len = radio.getDynamicPayloadSize();
@@ -190,20 +192,20 @@ public class MainActivity extends Activity {
 
       }
     }
-  }
+
 
 
   private void dynPairPing(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
-
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.begin();
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
 
 
-      radio.openWritingPipe(dyn_pipes[0]);
+      radio.openWritingPipe(new String(dyn_pipes[0]));
       radio.openReadingPipe((byte) 1, dyn_pipes[1]);
-      Log.d(TAG, radio.printDetails());
+    //  Log.d(TAG, radio.printDetails());
 
       int nextPayloadSize = 4;
 
@@ -228,7 +230,7 @@ public class MainActivity extends Activity {
           if (timeout) {
             Log.d(TAG, "Failed, response timeout,");
           } else {
-            byte len = radio.getDynamicPayloadSize();
+            int len = radio.getDynamicPayloadSize();
             if (len > 0) {
               byte[] receive_payload = radio.read(len);
               // receive_payload[len] = 0;
@@ -246,18 +248,18 @@ public class MainActivity extends Activity {
 
       }
     }
-  }
+// }
 
   private void pongBackCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
-
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
 
-      radio.openWritingPipe(pipes[0].getBytes());
+      radio.openWritingPipe(pipes[0]);
       radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-      Log.d(TAG, radio.printDetails());
+    //  Log.d(TAG, radio.printDetails());
 
       byte counter = 1;
 
@@ -265,7 +267,7 @@ public class MainActivity extends Activity {
       radio.writeAckPayload((byte) 1, new byte[]{counter}, 1);
 
       while (!stop) {
-        byte pipeNo = radio.available(false);
+        int pipeNo = radio.availablePipe();
         if (pipeNo > -1) {
           byte[] buffer = radio.read(1);
           buffer[0] += 1;
@@ -282,18 +284,18 @@ public class MainActivity extends Activity {
       }
     }
 
-  }
+
 
   private void pongBack(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
-
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
 
-      radio.openWritingPipe(pipes[0].getBytes());
+      radio.openWritingPipe(pipes[0]);
       radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-      Log.d(TAG, radio.printDetails());
+      //Log.d(TAG, radio.printDetails());
 
       radio.startListening();
       while (!stop) {
@@ -314,20 +316,20 @@ public class MainActivity extends Activity {
         }
         //stop = true;
       }
-    }
+
   }
 
   private void pingOut(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    try (RF24 radio = new RF24(peripheralManagerService, cePin)) {
-
+    NativeRF24 radio = new NativeRF24();
+    radio.init(cePin,spiSpeed,1,3);
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
 
-      radio.openWritingPipe(pipes[0].getBytes());
+      radio.openWritingPipe(pipes[0]);
       radio.openReadingPipe((byte) 1, pipes[1].getBytes());
 
-      Log.d(TAG, radio.printDetails());
+      //Log.d(TAG, radio.printDetails());
 
       radio.startListening();
       while (!stop) {
@@ -366,7 +368,7 @@ public class MainActivity extends Activity {
 
       }
     }
-  }
+
 
   @Override
   public void onResume(){

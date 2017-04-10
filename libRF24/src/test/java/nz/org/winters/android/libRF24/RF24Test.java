@@ -39,7 +39,7 @@ public class RF24Test {
   public Gpio cePinMock;
 
   private List<String> spiDevices = new ArrayList<>();
-  private RF24 radio;
+  private NativeRF24 radio;
 
   @Before
   public void setUp() throws Exception {
@@ -52,7 +52,7 @@ public class RF24Test {
 
     InOrder inOrder = Mockito.inOrder(spiDeviceMock, cePinMock);
 
-    radio = new RF24(peripheralManagerServiceMock,cePinMock);
+    radio = new NativeRF24();
 
     // constructor calls.
     inOrder.verify(cePinMock).setDirection(Gpio.DIRECTION_OUT_INITIALLY_HIGH);

@@ -5,6 +5,8 @@
 #include <jni.h>
 #include <string>
 
+
+
 extern "C"
 jbyteArray
 Java_com_example_androidthings_rf24_MainActivity_longToCByteArray(
