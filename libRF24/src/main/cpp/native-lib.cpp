@@ -18,13 +18,14 @@ RF24Network *network = NULL;
 RF24NetworkHeader fromJHeaderToCHeader(JNIEnv *env, jobject jheader);
 
 jobject fromCHeaderToJHeader(JNIEnv *env, jobject jheader, const RF24NetworkHeader &networkHeader);
-
-JNIEXPORT void JNICALL
+extern "C"
+void
 Java_nz_org_winters_android_libRF24_NativeRF24_init(JNIEnv *env, jobject instance, jint cePin,
                                                     jint spiFrequency, jint spiBus) {
     radio = new RF24((uint16_t) cePin, (uint16_t) spiBus, (uint32_t) spiFrequency);
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_available(JNIEnv *env, jobject instance) {
     if (radio) {
@@ -33,6 +34,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_available(JNIEnv *env, jobject in
     return (jboolean) false;
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_availablePipe(JNIEnv *env, jobject instance) {
     if (radio) {
@@ -44,6 +46,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_availablePipe(JNIEnv *env, jobjec
     return -1;
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setPALevel(JNIEnv *env, jobject instance,
                                                           jint level) {
@@ -55,6 +58,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setPALevel(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getPALevel(JNIEnv *env, jobject instance) {
 
@@ -65,6 +69,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getPALevel(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setDataRate(JNIEnv *env, jobject instance,
                                                            jint speed) {
@@ -76,6 +81,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setDataRate(JNIEnv *env, jobject 
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getDataRate(JNIEnv *env, jobject instance) {
 
@@ -85,6 +91,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getDataRate(JNIEnv *env, jobject 
     return -1;
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setCRCLength(JNIEnv *env, jobject instance,
                                                             jint length) {
@@ -95,6 +102,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setCRCLength(JNIEnv *env, jobject
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getCRCLength(JNIEnv *env, jobject instance) {
 
@@ -105,6 +113,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getCRCLength(JNIEnv *env, jobject
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_disableCRC(JNIEnv *env, jobject instance) {
 
@@ -114,6 +123,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_disableCRC(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_read(JNIEnv *env, jobject instance, jint length) {
 
@@ -129,6 +139,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_read(JNIEnv *env, jobject instanc
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_stopListening(JNIEnv *env, jobject instance) {
 
@@ -138,6 +149,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_stopListening(JNIEnv *env, jobjec
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_startListening(JNIEnv *env, jobject instance) {
 
@@ -147,6 +159,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_startListening(JNIEnv *env, jobje
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_startFastWrite(JNIEnv *env, jobject instance,
                                                               jbyteArray buf_, jint len,
@@ -162,6 +175,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_startFastWrite(JNIEnv *env, jobje
     env->ReleaseByteArrayElements(buf_, buf, 0);
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_startWrite(JNIEnv *env, jobject instance,
                                                           jbyteArray buf_, jint len,
@@ -175,6 +189,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_startWrite(JNIEnv *env, jobject i
     env->ReleaseByteArrayElements(buf_, buf, 0);
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_openWritingPipe__J(JNIEnv *env, jobject instance,
                                                                   jlong address) {
@@ -186,6 +201,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_openWritingPipe__J(JNIEnv *env, j
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_closeReadingPipe(JNIEnv *env, jobject instance,
                                                                 jint pipe) {
@@ -196,6 +212,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_closeReadingPipe(JNIEnv *env, job
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_openReadingPipe__IJ(JNIEnv *env, jobject instance,
                                                                    jint pipe, jlong address) {
@@ -206,6 +223,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_openReadingPipe__IJ(JNIEnv *env, 
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_openReadingPipe__ILbyte_3_093_2(JNIEnv *env,
                                                                                jobject instance,
@@ -220,6 +238,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_openReadingPipe__ILbyte_3_093_2(J
     env->ReleaseByteArrayElements(address_, address, 0);
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setAddressWidth(JNIEnv *env, jobject instance,
                                                                jint a_width) {
@@ -230,6 +249,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setAddressWidth(JNIEnv *env, jobj
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_reUseTx(JNIEnv *env, jobject instance) {
 
@@ -240,6 +260,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_reUseTx(JNIEnv *env, jobject inst
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_flush_1tx(JNIEnv *env, jobject instance) {
 
@@ -249,6 +270,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_flush_1tx(JNIEnv *env, jobject in
     return 0;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_testCarrier(JNIEnv *env, jobject instance) {
 
@@ -259,6 +281,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_testCarrier(JNIEnv *env, jobject 
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_testRPD(JNIEnv *env, jobject instance) {
 
@@ -269,6 +292,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_testRPD(JNIEnv *env, jobject inst
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setRetries(JNIEnv *env, jobject instance, jint delay,
                                                           jint count) {
@@ -280,6 +304,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setRetries(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setChannel(JNIEnv *env, jobject instance,
                                                           jint channel) {
@@ -290,6 +315,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setChannel(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getChannel(JNIEnv *env, jobject instance) {
 
@@ -300,6 +326,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getChannel(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setPayloadSize(JNIEnv *env, jobject instance,
                                                               jint size) {
@@ -310,6 +337,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setPayloadSize(JNIEnv *env, jobje
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getPayloadSize(JNIEnv *env, jobject instance) {
 
@@ -321,6 +349,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getPayloadSize(JNIEnv *env, jobje
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_getDynamicPayloadSize(JNIEnv *env,
                                                                      jobject instance) {
@@ -333,6 +362,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_getDynamicPayloadSize(JNIEnv *env
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_isPVariant(JNIEnv *env, jobject instance) {
 
@@ -344,6 +374,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_isPVariant(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_rxFifoFull(JNIEnv *env, jobject instance) {
 
@@ -354,6 +385,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_rxFifoFull(JNIEnv *env, jobject i
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_powerDown(JNIEnv *env, jobject instance) {
 
@@ -362,6 +394,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_powerDown(JNIEnv *env, jobject in
     }
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_powerUp(JNIEnv *env, jobject instance) {
 
@@ -371,6 +404,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_powerUp(JNIEnv *env, jobject inst
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_write__Lbyte_3_093_2I(JNIEnv *env, jobject instance,
                                                                      jbyteArray buffer_, jint len) {
@@ -385,6 +419,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_write__Lbyte_3_093_2I(JNIEnv *env
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_write__Lbyte_3_093_2IZ(JNIEnv *env, jobject instance,
                                                                       jbyteArray buffer_, jint len,
@@ -400,6 +435,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_write__Lbyte_3_093_2IZ(JNIEnv *en
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_writeFast__Lbyte_3_093_2I(JNIEnv *env,
                                                                          jobject instance,
@@ -418,6 +454,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_writeFast__Lbyte_3_093_2I(JNIEnv 
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_writeFast__Lbyte_3_093_2IZ(JNIEnv *env,
                                                                           jobject instance,
@@ -435,6 +472,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_writeFast__Lbyte_3_093_2IZ(JNIEnv
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_writeBlocking(JNIEnv *env, jobject instance,
                                                              jbyteArray buffer_, jint len,
@@ -451,6 +489,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_writeBlocking(JNIEnv *env, jobjec
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_txStandBy__(JNIEnv *env, jobject instance) {
 
@@ -461,6 +500,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_txStandBy__(JNIEnv *env, jobject 
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_txStandBy__JZ(JNIEnv *env, jobject instance,
                                                              jlong timeout, jboolean startTx) {
@@ -472,6 +512,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_txStandBy__JZ(JNIEnv *env, jobjec
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_isAckPayloadAvailable(JNIEnv *env,
                                                                      jobject instance) {
@@ -483,6 +524,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_isAckPayloadAvailable(JNIEnv *env
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_writeAckPayload(JNIEnv *env, jobject instance,
                                                                jint pipe, jbyteArray buf_,
@@ -496,6 +538,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_writeAckPayload(JNIEnv *env, jobj
     env->ReleaseByteArrayElements(buf_, buf, 0);
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setAutoAck__Z(JNIEnv *env, jobject instance,
                                                              jboolean enable) {
@@ -506,6 +549,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setAutoAck__Z(JNIEnv *env, jobjec
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_setAutoAck__IZ(JNIEnv *env, jobject instance,
                                                               jint pipe, jboolean enable) {
@@ -516,6 +560,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_setAutoAck__IZ(JNIEnv *env, jobje
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_enableDynamicAck(JNIEnv *env, jobject instance) {
 
@@ -525,6 +570,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_enableDynamicAck(JNIEnv *env, job
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_disableDynamicPayloads(JNIEnv *env,
                                                                       jobject instance) {
@@ -535,6 +581,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_disableDynamicPayloads(JNIEnv *en
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_enableDynamicPayloads(JNIEnv *env,
                                                                      jobject instance) {
@@ -546,6 +593,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_enableDynamicPayloads(JNIEnv *env
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_enableAckPayload(JNIEnv *env, jobject instance) {
 
@@ -556,6 +604,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_enableAckPayload(JNIEnv *env, job
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_begin(JNIEnv *env, jobject instance) {
 
@@ -566,6 +615,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_begin(JNIEnv *env, jobject instan
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24_openWritingPipe__Ljava_lang_String_2(JNIEnv *env,
                                                                                     jobject instance,
@@ -579,6 +629,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24_openWritingPipe__Ljava_lang_Strin
     env->ReleaseStringUTFChars(address_, address);
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_getNetworkFlags(JNIEnv *env,
                                                                       jobject instance) {
@@ -590,6 +641,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_getNetworkFlags(JNIEnv *en
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_setNetworkFlags(JNIEnv *env, jobject instance,
                                                                       jint flags) {
@@ -600,6 +652,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_setNetworkFlags(JNIEnv *en
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_begin__II(JNIEnv *env, jobject instance,
                                                                 jint channel, jint node_address) {
@@ -610,6 +663,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_begin__II(JNIEnv *env, job
     }
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_isValidAddress(JNIEnv *env, jobject instance,
                                                                      jint node) {
@@ -620,6 +674,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_isValidAddress(JNIEnv *env
     return (jboolean) false;
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_addressOfPipe(JNIEnv *env, jobject instance,
                                                                     jint node, jint pipeNo) {
@@ -631,6 +686,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_addressOfPipe(JNIEnv *env,
     return -1;
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_parent(JNIEnv *env, jobject instance) {
 
@@ -640,6 +696,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_parent(JNIEnv *env, jobjec
     return -1;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_write__Lnz_org_winters_android_libRF24_NativeRF24Network_RF24NetworkHeader_2Lbyte_3_093_2II(
         JNIEnv *env, jobject instance, jobject header, jbyteArray message_, jint maxLen,
@@ -657,6 +714,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_write__Lnz_org_winters_and
 
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_multicast(JNIEnv *env, jobject instance,
                                                                 jobject header, jbyteArray message_,
@@ -673,6 +731,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_multicast(JNIEnv *env, job
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_getRouteTimeout(JNIEnv *env,
                                                                       jobject instance) {
@@ -683,6 +742,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_getRouteTimeout(JNIEnv *en
 return -1;
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_setRouteTimeout(JNIEnv *env, jobject instance,
                                                                       jint timeout) {
@@ -693,6 +753,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_setRouteTimeout(JNIEnv *en
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_getTxTimeout(JNIEnv *env, jobject instance) {
 
@@ -702,6 +763,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_getTxTimeout(JNIEnv *env, 
     return -1;
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_setTxTimeout(JNIEnv *env, jobject instance,
                                                                    jint timeout) {
@@ -712,6 +774,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_setTxTimeout(JNIEnv *env, 
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_setMulticastRelay(JNIEnv *env,
                                                                         jobject instance,
@@ -723,6 +786,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_setMulticastRelay(JNIEnv *
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_multicastLevel(JNIEnv *env, jobject instance,
                                                                      jint level) {
@@ -759,6 +823,7 @@ jobject fromCHeaderToJHeader(JNIEnv *env, jobject jheader, const RF24NetworkHead
 }
 
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_write__Lnz_org_winters_android_libRF24_NativeRF24Network_RF24NetworkHeader_2Lbyte_3_093_2I(
         JNIEnv *env, jobject instance, jobject header, jbyteArray message_, jint maxLen) {
@@ -773,6 +838,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_write__Lnz_org_winters_and
     return (jboolean) rv;
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_read(JNIEnv *env, jobject instance,
                                                            jobject header, jbyteArray message_,
@@ -790,6 +856,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_read(JNIEnv *env, jobject 
 }
 
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_peek(JNIEnv *env, jobject instance,
                                                            jobject header) {
@@ -803,6 +870,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_peek(JNIEnv *env, jobject 
     return rv;
 }
 
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_available(JNIEnv *env, jobject instance) {
 
@@ -814,6 +882,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_available(JNIEnv *env, job
 
 }
 
+extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_update(JNIEnv *env, jobject instance) {
 
@@ -825,6 +894,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_update(JNIEnv *env, jobjec
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_begin__I(JNIEnv *env, jobject instance,
                                                                jint nodeAddress) {
@@ -836,6 +906,7 @@ Java_nz_org_winters_android_libRF24_NativeRF24Network_begin__I(JNIEnv *env, jobj
 
 }
 
+extern "C"
 JNIEXPORT void JNICALL
 Java_nz_org_winters_android_libRF24_NativeRF24Network_init(JNIEnv *env, jobject instance) {
 
