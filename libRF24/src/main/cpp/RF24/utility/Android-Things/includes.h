@@ -4,6 +4,5 @@
 
   #define RF24_AndroidThings
   #include "Android-Things/RF24_arch_config.h"
-  #include "Android-Things/interrupt.h"
-  
+
 #endif

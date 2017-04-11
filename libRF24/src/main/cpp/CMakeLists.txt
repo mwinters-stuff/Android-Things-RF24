@@ -24,6 +24,7 @@ find_package(AndroidThings REQUIRED)
 add_library(RF24 SHARED
             native-lib.cpp
             RF24/RF24.cpp
+            RF24Network/RF24Network.cpp
             RF24/utility/Android-Things/spi.cpp)
 
 target_include_directories(RF24 PRIVATE

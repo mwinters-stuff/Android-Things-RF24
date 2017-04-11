@@ -109,8 +109,7 @@ public class MainActivity extends Activity {
   }
 
   private void pingOutCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
@@ -153,8 +152,7 @@ public class MainActivity extends Activity {
   static final byte[][] dyn_pipes = {{(byte)0xE1,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}, {(byte)0xD2,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}};
 
   private void dynPairPong(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
 
@@ -196,8 +194,7 @@ public class MainActivity extends Activity {
 
 
   private void dynPairPing(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.begin();
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
@@ -251,8 +248,7 @@ public class MainActivity extends Activity {
 // }
 
   private void pongBackCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
@@ -287,8 +283,7 @@ public class MainActivity extends Activity {
 
 
   private void pongBack(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
@@ -320,8 +315,7 @@ public class MainActivity extends Activity {
   }
 
   private void pingOut(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24();
-    radio.init(cePin,spiSpeed,1,3);
+    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
