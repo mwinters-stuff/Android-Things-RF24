@@ -1,7 +1,9 @@
-package nz.org.winters.android.libRF24;
+package com.example.androidthings.rf24;
 
 import android.support.annotation.IntDef;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -9,12 +11,14 @@ import java.lang.annotation.RetentionPolicy;
  * Created by mathew on 10/04/17.
  */
 
-public class NativeRF24 {
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class NativeRF24 implements Closeable{
   public static final int RF24_PA_MIN = 0;
   public static final int RF24_PA_LOW = 1;
   public static final int RF24_PA_HIGH = 2;
   public static final int RF24_PA_MAX = 3;
   public static final int RF24_PA_ERROR = 4;
+
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RF24_PA_MIN, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX, RF24_PA_ERROR})
@@ -41,12 +45,19 @@ public class NativeRF24 {
 
 
   static {
-    System.loadLibrary("RF24");
+    System.loadLibrary("native-lib");
   }
 
   public NativeRF24(int cePin, int spiFrequency, int spiBus) {
     init(cePin, spiFrequency, spiBus);
   }
+
+  @Override
+  public void close() throws IOException {
+    closeDevices();
+  }
+
+  public native void closeDevices();
 
   public native void init(int cePin, int spiFrequency, int spiBus);
 
@@ -119,7 +130,7 @@ public class NativeRF24 {
 
   public native void setAddressWidth(int a_width);
 
-  public native void openReadingPipe(int pipe, byte[] address);
+  public native void openReadingPipeStr(int pipe, String address);
 
   public native void openReadingPipe(int pipe, long address);
 
@@ -127,7 +138,7 @@ public class NativeRF24 {
 
   public native void openWritingPipe(long address);
 
-  public native void openWritingPipe(String address);
+  public native void openWritingPipeStr(String address);
 
   public native void startWrite(byte[] buf, int len, boolean multicast);
 
@@ -154,5 +165,6 @@ public class NativeRF24 {
 
   public native void setPALevel(int level);
 
+  public native void printDetails();
 
 }

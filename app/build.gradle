@@ -35,6 +35,8 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11"
+                arguments "-DPROJECT_DIR=${rootProject.projectDir}"
+                arguments "-DANDROIDTHINGS_DIR=${rootProject.projectDir}/libandroidthings/armeabi-v7a/include"
             }
         }
     }
@@ -73,7 +75,8 @@ dependencies {
     //testCompile 'org.mockito:mockito-android:2.6.3'
 
 
-    compile project(path: ':libRF24')
+    //compile project(path: ':libRF24')
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 android.applicationVariants.all { variant ->

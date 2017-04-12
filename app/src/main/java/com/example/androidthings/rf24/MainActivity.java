@@ -25,12 +25,12 @@ import com.google.android.things.pio.PeripheralManagerService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
-
-import nz.org.winters.android.libRF24.NativeRF24;
+import java.util.Locale;
 
 
 /**
@@ -55,6 +55,7 @@ import nz.org.winters.android.libRF24.NativeRF24;
 @EActivity(R.layout.main_activity)
 public class MainActivity extends Activity {
   private static final String TAG = MainActivity.class.getSimpleName();
+
   static {
     System.loadLibrary("native-lib");
   }
@@ -62,13 +63,14 @@ public class MainActivity extends Activity {
   @Pref
   AppPrefs_ appPrefs;
 
-  private static final int cePin = 22;
+  private static final int cePin = 25;
   private static final int spiSpeed = 8000000;
   private Gpio ledPinRed;
 
   boolean stop = false;
-  String[] pipes = {"1Node","2Node"};
+  String[] pipes_strs = {"1Node", "2Node"};
 
+  private static int radioNumber = 0;
 
   @AfterViews
   protected void onAfterViews() {
@@ -82,7 +84,7 @@ public class MainActivity extends Activity {
       ledPinRed.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
       ledPinRed.setValue(false);
 
-      pingRadioThread(peripheralManagerService);
+      //    pingRadioThread(peripheralManagerService);
 
     } catch (Exception e) { // NOSONAR
       Log.d("ERROR", "Exception: " + e.getMessage());
@@ -90,33 +92,24 @@ public class MainActivity extends Activity {
   }
 
 
-  @Background
-  void pingRadioThread(PeripheralManagerService peripheralManagerService){
-    try {
-
-      //pingOut(peripheralManagerService);
-     //pongBack(peripheralManagerService);
-
-     // pongBackCallResponse(peripheralManagerService);
-      //pingOutCallResponse(peripheralManagerService);
-     dynPairPong(peripheralManagerService);
-      //dynPairPing(peripheralManagerService);
-
-    } catch (Exception e) { // NOSONAR
-      Log.d("ERROR", "Exception: " + e.getMessage());
-    }
-
-  }
-
-  private void pingOutCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+  @Background(serial = "RF24")
+  void pingOutCallResponse(){
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
 
-      radio.openWritingPipe(pipes[0]);
-      radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-    //  Log.d(TAG, radio.printDetails());
+      if (radioNumber == 1) {
+        radio.openWritingPipeStr(pipes_strs[1]);
+        radio.openReadingPipeStr(1, pipes_strs[0]);
+      } else {
+        radio.openWritingPipeStr(pipes_strs[0]);
+        radio.openReadingPipeStr(1, pipes_strs[1]);
+      }
+
+
+      radio.printDetails();
 
       byte counter = 1;
 
@@ -142,24 +135,30 @@ public class MainActivity extends Activity {
         }
         Thread.sleep(1000);
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-
-
+  }
 
 
   static final String send_payload_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
+  static long pipes[] = {0xF0F0F0F0E1L, 0xF0F0F0F0D2L};
+//  static final byte[][] dyn_pipes = {{(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xE1}, {(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xD2}};
 
-  static final byte[][] dyn_pipes = {{(byte)0xE1,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}, {(byte)0xD2,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0}};
+  @Background(serial = "RF24")
+  void dynPairPong() {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
 
-  private void dynPairPong(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+      radio.begin();
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
+//radio.setChannel(0x60);
 
-
-      radio.openWritingPipe(new String(dyn_pipes[1]));
-      radio.openReadingPipe((byte) 1, dyn_pipes[0]);
-      //Log.d(TAG, radio.printDetails());
+      radio.openWritingPipe(pipes[1]);
+      radio.openReadingPipe((byte) 1, pipes[0]);
+      //Log.d(TAG, radio.printDetails())
+      radio.printDetails();
       radio.startListening();
 
       int nextPayloadSize = 4;
@@ -189,20 +188,24 @@ public class MainActivity extends Activity {
 
 
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
 
-
-  private void dynPairPing(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+  @Background(serial = "RF24")
+  void dynPairPing() {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
       radio.begin();
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
 
 
-      radio.openWritingPipe(new String(dyn_pipes[0]));
-      radio.openReadingPipe((byte) 1, dyn_pipes[1]);
-    //  Log.d(TAG, radio.printDetails());
+      radio.openWritingPipe(pipes[0]);
+      radio.openReadingPipe((byte) 1, pipes[1]);
+      radio.printDetails();
 
       int nextPayloadSize = 4;
 
@@ -224,38 +227,49 @@ public class MainActivity extends Activity {
           }
         }
 
-          if (timeout) {
-            Log.d(TAG, "Failed, response timeout,");
+        if (timeout) {
+          Log.d(TAG, "Failed, response timeout,");
+        } else {
+          int len = radio.getDynamicPayloadSize();
+          if (len > 0) {
+            byte[] receive_payload = radio.read(len);
+            // receive_payload[len] = 0;
+            Log.d(TAG, String.format("got response size %d value=%s", len, new String(receive_payload)));
           } else {
-            int len = radio.getDynamicPayloadSize();
-            if (len > 0) {
-              byte[] receive_payload = radio.read(len);
-              // receive_payload[len] = 0;
-              Log.d(TAG, String.format("got response size %d value=%s", len, new String(receive_payload)));
-            } else {
-              Log.d(TAG, "Dynamic payload size = 0");
-            }
+            Log.d(TAG, "Dynamic payload size = 0");
           }
-          nextPayloadSize += 1;
-          if (nextPayloadSize > 32) {
-            nextPayloadSize = 4;
-          }
-          Thread.sleep(100);
+        }
+        nextPayloadSize += 1;
+        if (nextPayloadSize > 32) {
+          nextPayloadSize = 4;
+        }
+        Thread.sleep(100);
 
 
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-// }
+  }
 
-  private void pongBackCallResponse(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+
+  @Background(serial = "RF24")
+  void pongBackCallResponse() {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
 
-      radio.openWritingPipe(pipes[0]);
-      radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-    //  Log.d(TAG, radio.printDetails());
+      if (radioNumber == 1) {
+        radio.openWritingPipeStr(pipes_strs[1]);
+        radio.openReadingPipeStr(1, pipes_strs[0]);
+      } else {
+        radio.openWritingPipeStr(pipes_strs[0]);
+        radio.openReadingPipeStr(1, pipes_strs[1]);
+      }
+      radio.printDetails();
 
       byte counter = 1;
 
@@ -272,27 +286,37 @@ public class MainActivity extends Activity {
           Thread.sleep(900);
         } else {
           Log.d(TAG, "No available");
-  //        Thread.sleep(1000);
+          //        Thread.sleep(1000);
         }
-  //      radio.flushRx();
-  //      radio.flushTx();
+        //      radio.flushRx();
+        //      radio.flushTx();
 
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
+  }
 
 
-  private void pongBack(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+  @Background(serial = "RF24")
+  void pongBack() {
+    stop = false;
+    try(NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
       radio.begin();
+      radio.setPALevel(NativeRF24.RF24_PA_LOW);
+      //radio.setRetries((byte) 15, (byte) 15);
 
-      radio.setRetries((byte) 15, (byte) 15);
-
-      radio.openWritingPipe(pipes[0]);
-      radio.openReadingPipe((byte) 1, pipes[1].getBytes());
-      //Log.d(TAG, radio.printDetails());
+      if (radioNumber == 1) {
+        radio.openWritingPipeStr(pipes_strs[1]);
+        radio.openReadingPipeStr(1, pipes_strs[0]);
+      } else {
+        radio.openWritingPipeStr(pipes_strs[0]);
+        radio.openReadingPipeStr(1, pipes_strs[1]);
+      }
 
       radio.startListening();
+      radio.printDetails();
       while (!stop) {
         if (radio.available()) {
           long got_time = 0;
@@ -311,19 +335,28 @@ public class MainActivity extends Activity {
         }
         //stop = true;
       }
-
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
-  private void pingOut(PeripheralManagerService peripheralManagerService) throws IOException, InterruptedException {
-    NativeRF24 radio = new NativeRF24(cePin,spiSpeed,1);
+  @Background(serial = "RF24")
+  void pingOut()  {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
 
-      radio.openWritingPipe(pipes[0]);
-      radio.openReadingPipe((byte) 1, pipes[1].getBytes());
+      if (radioNumber == 1) {
+        radio.openWritingPipeStr(pipes_strs[1]);
+        radio.openReadingPipeStr(1, pipes_strs[0]);
+      } else {
+        radio.openWritingPipeStr(pipes_strs[0]);
+        radio.openReadingPipeStr(1, pipes_strs[1]);
+      }
 
-      //Log.d(TAG, radio.printDetails());
+      radio.printDetails();
 
       radio.startListening();
       while (!stop) {
@@ -361,20 +394,21 @@ public class MainActivity extends Activity {
         Thread.sleep(1000);
 
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-
+  }
 
   @Override
-  public void onResume(){
+  public void onResume() {
     super.onResume();
   }
 
   @Override
-  public void onPause(){
+  public void onPause() {
     stop = true;
     super.onPause();
   }
-
 
 
   @Override
@@ -383,16 +417,39 @@ public class MainActivity extends Activity {
     Log.d(TAG, "onDestroy");
     try {
       ledPinRed.setValue(false);
-    } catch (IOException ignore) {}
+    } catch (IOException ignore) {
+    }
   }
 
 
-  private void flipLED() throws IOException{
-    if(ledPinRed != null) {
+  private void flipLED() throws IOException {
+    if (ledPinRed != null) {
       ledPinRed.setValue(!ledPinRed.getValue());
     }
   }
 
   public native byte[] longToCByteArray(long value);
-  public native long  byteArrayToClong(byte[] array);
+
+  public native long byteArrayToClong(byte[] array);
+
+  @Click(R.id.buttonStop)
+  void onClickStop() {
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Stopped"));
+  }
+
+  @Click(R.id.buttonPongBack)
+  void onClickPongBack() {
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Basic Pong Back"));
+    pongBack();
+  }
+
+  @Click(R.id.buttonPingOut)
+  void onClickPingOut() {
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Basic Ping Out"));
+    pingOut();
+  }
+
 }

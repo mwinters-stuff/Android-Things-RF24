@@ -1,4 +1,4 @@
-package nz.org.winters.android.libRF24;
+package com.example.androidthings.rf24;
 
 import android.support.annotation.IntRange;
 
@@ -7,7 +7,7 @@ import android.support.annotation.IntRange;
  */
 public class NativeRF24Network {
   static {
-    System.loadLibrary("RF24");
+    System.loadLibrary("native-lib");
   }
 
   /**
