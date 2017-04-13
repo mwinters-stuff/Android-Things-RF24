@@ -17,5 +17,8 @@
     <string name="title_plus">RF24 Test: %s</string>
     <string name="log">Log</string>
     <string name="clear">Clear</string>
+    <string name="ping_pair_ack">Ping Pair Ack</string>
+    <string name="ack_pong_back">Ping Pair Ack Pong Back</string>
+    <string name="ack_ping_out">Ping Pair Ack Ping Out</string>
 
 </resources>

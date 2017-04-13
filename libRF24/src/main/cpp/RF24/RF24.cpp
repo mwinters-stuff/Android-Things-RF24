@@ -687,7 +687,7 @@ bool RF24::begin(void)
 
   // Enable PTX, do not write CE high so radio will remain in standby I mode ( 130us max to transition to RX or TX instead of 1500us from powerUp )
   // PTX should use only 22uA of power
-  write_register(NRF_CONFIG, ( read_register(NRF_CONFIG) ) & ~_BV(PRIM_RX) );
+  write_register(NRF_CONFIG, (uint8_t) (( read_register(NRF_CONFIG) ) & ~_BV(PRIM_RX) ));
 
   // if setup is 0 or ff then there was no response from module
   return ( setup != 0 && setup != 0xff );
@@ -700,7 +700,7 @@ void RF24::startListening(void)
  #if !defined (RF24_TINY) && ! defined(LITTLEWIRE)
   powerUp();
  #endif
-  write_register(NRF_CONFIG, read_register(NRF_CONFIG) | _BV(PRIM_RX));
+  write_register(NRF_CONFIG, (uint8_t) (read_register(NRF_CONFIG) | _BV(PRIM_RX)));
   write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );
   ce(HIGH);
   // Restore the pipe0 adddress, if exists
@@ -804,7 +804,7 @@ bool RF24::write( const void* buf, uint8_t len, const bool multicast )
 		uint32_t timer = millis();
 	#endif 
 	
-	while( ! ( get_status()  & ( _BV(TX_DS) | _BV(MAX_RT) ))) { 
+	while( ! ( get_status()  & ( _BV(TX_DS) | _BV(MAX_RT) ))) {
 		#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 			if(millis() - timer > 95){			
 				errNotify();
@@ -1154,7 +1154,7 @@ static const uint8_t child_payload_size[] PROGMEM =
 void RF24::openReadingPipe(uint8_t child, uint64_t address)
 {
   // If this is pipe 0, cache the address.  This is needed because
-  // openWritingPipe() will overwrite the pipe 0 address, so
+  // openWritingPipeStr() will overwrite the pipe 0 address, so
   // startListening() will have to restore it.
   if (child == 0){
     memcpy(pipe0_reading_address,&address,addr_width);
@@ -1195,7 +1195,7 @@ void RF24::setAddressWidth(uint8_t a_width){
 void RF24::openReadingPipe(uint8_t child, const uint8_t *address)
 {
   // If this is pipe 0, cache the address.  This is needed because
-  // openWritingPipe() will overwrite the pipe 0 address, so
+  // openWritingPipeStr() will overwrite the pipe 0 address, so
   // startListening() will have to restore it.
   if (child == 0){
     memcpy(pipe0_reading_address,address,addr_width);

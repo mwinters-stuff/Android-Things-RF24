@@ -15,7 +15,7 @@
 #include <pio/spi_device.h>
 #include <pio/peripheral_manager_client.h>
 
-#define SPI_HAS_TRANSACTION
+//#define SPI_HAS_TRANSACTION
 #define MSBFIRST ASPI_MSB_FIRST
 #define SPI_MODE0 ASPI_MODE0
 #define RF24_SPI_SPEED 8000000

@@ -1,4 +1,4 @@
-package com.example.androidthings.rf24;
+package nz.org.winters.android.things.RF24;
 
 import android.support.annotation.IntDef;
 
@@ -45,7 +45,7 @@ public class NativeRF24 implements Closeable{
 
 
   static {
-    System.loadLibrary("native-lib");
+    System.loadLibrary("RF24");
   }
 
   public NativeRF24(int cePin, int spiFrequency, int spiBus) {
@@ -89,13 +89,13 @@ public class NativeRF24 implements Closeable{
 
   public native boolean writeBlocking(byte[] buffer, int len, long timeout);
 
-  public native boolean writeFast(byte[] buffer, int len, boolean multicast);
+  public native boolean writeFastEx(byte[] buffer, int len, boolean multicast);
 
   public native boolean writeFast(byte[] buffer, int len);
 
-  public native boolean write(byte[] buffer, int len, boolean multicast);
-
   public native boolean write(byte[] buffer, int len);
+
+  public native boolean writeEx(byte[] buffer, int len, boolean multicast);
 
 
   public native void powerUp();

@@ -1,13 +1,14 @@
-package com.example.androidthings.rf24;
+package nz.org.winters.android.things.RF24;
 
 import android.support.annotation.IntRange;
 
 /**
  * @author MWinters
  */
+@SuppressWarnings("unused")
 public class NativeRF24Network {
   static {
-    System.loadLibrary("native-lib");
+    System.loadLibrary("RF24");
   }
 
   /**
@@ -28,6 +29,7 @@ public class NativeRF24Network {
   public static final int FLAG_NO_POLL = 8;
 
 
+  @SuppressWarnings("WeakerAccess")
   public class RF24NetworkHeader {
 
     public int from_node;

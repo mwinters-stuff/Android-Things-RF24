@@ -125,7 +125,9 @@ public:
   //#endif
 
   #if defined (RF24_LINUX)
-  virtual ~RF24() {};
+  virtual ~RF24() {
+    _SPI.end();
+  };
   #endif
 
   /**

@@ -83,7 +83,14 @@ SPI::~SPI() {
 }
 
 void SPI::end() {
-
+  if(gpioPins[0]){
+    AGpio_delete(gpioPins[0]);
+  }
+  if(gpioPins[1]){
+    AGpio_delete(gpioPins[1]);
+  }
+  ASpiDevice_delete(spiDevice);
+  APeripheralManagerClient_delete(peripheralManagerClient);
 }
 
 void SPI::internalDelay(uint32_t delay) {

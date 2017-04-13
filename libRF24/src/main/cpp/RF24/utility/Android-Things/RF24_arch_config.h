@@ -11,7 +11,9 @@
   #include <sys/time.h>
   #include <stddef.h>
 #include <pio/gpio.h>
-  
+
+#include <android/log.h>
+
   //#include "bcm2835.h"
   #include "spi.h"
   #define _SPI spi
@@ -23,10 +25,14 @@
   #define _BV(x) (1<<(x))
   #define pgm_read_word(p) (*(p))
   #define pgm_read_byte(p) (*(p))
-  
+
+#define  LOG_TAG    "RF24"
+#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+
   //typedef uint16_t prog_uint16_t;
   #define PSTR(x) (x)
-  #define printf_P printf
+  #define printf_P ALOG
+  #define printf ALOG
   #define strlen_P strlen
   #define PROGMEM
   #define PRIPSTR "%s"

@@ -22,7 +22,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_DIR}/libandroidthings)
 find_package(AndroidThings REQUIRED)
 
 add_library(RF24 SHARED
-            native-lib.cpp
+            native-lib-RF24.cpp
+            native-lib-RF24Network.cpp
             RF24/RF24.cpp
             RF24Network/RF24Network.cpp
             RF24/utility/Android-Things/spi.cpp)

@@ -28,11 +28,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 import java.util.Locale;
+
+import nz.org.winters.android.things.RF24.NativeRF24;
 
 
 /**
@@ -98,54 +101,6 @@ public class MainActivity extends Activity {
   }
 
 
-  @Background(serial = "RF24")
-  void pingOutCallResponse(){
-    stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
-      radio.begin();
-      radio.enableAckPayload();
-      radio.enableDynamicPayloads();
-
-      if (radioNumber == 1) {
-        radio.openWritingPipeStr(pipes_strs[1]);
-        radio.openReadingPipeStr(1, pipes_strs[0]);
-      } else {
-        radio.openWritingPipeStr(pipes_strs[0]);
-        radio.openReadingPipeStr(1, pipes_strs[1]);
-      }
-
-
-      radio.printDetails();
-
-      byte counter = 1;
-
-      radio.startListening();
-      radio.writeAckPayload((byte) 1, new byte[]{counter}, 1);
-
-      while (!stop) {
-        radio.stopListening();
-        log( String.format("Now sending %d as payload.", counter));
-        long time = SystemClock.uptimeMillis();
-        if (radio.write(new byte[]{counter}, 1)) {
-          if (!radio.available()) {
-            log( String.format("Got blank response. round trip delay: %d", SystemClock.uptimeMillis() - time));
-          } else {
-            while (radio.available()) {
-              byte[] buffer = radio.read(1);
-              log( String.format(Locale.getDefault(),"Got response %d. round-trip delay %d", buffer[0], SystemClock.uptimeMillis() - time));
-              counter++;
-            }
-          }
-        } else {
-          log( "Sending Failed.");
-        }
-        Thread.sleep(1000);
-      }
-    } catch (Exception e) {
-      log(e.toString());
-
-    }
-  }
 
 
   static final String send_payload_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
@@ -261,6 +216,55 @@ public class MainActivity extends Activity {
 
 
   @Background(serial = "RF24")
+  void pingOutCallResponse(){
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+      radio.begin();
+      radio.enableAckPayload();
+      radio.enableDynamicPayloads();
+
+      if (radioNumber == 1) {
+        radio.openWritingPipeStr(pipes_strs[1]);
+        radio.openReadingPipeStr(1, pipes_strs[0]);
+      } else {
+        radio.openWritingPipeStr(pipes_strs[0]);
+        radio.openReadingPipeStr(1, pipes_strs[1]);
+      }
+
+
+      radio.printDetails();
+
+      byte counter = 1;
+
+      radio.startListening();
+      radio.writeAckPayload((byte) 1, new byte[]{counter}, 1);
+
+      while (!stop) {
+        radio.stopListening();
+        log( String.format(Locale.getDefault(),"Now sending %d as payload.", counter));
+        long time = SystemClock.uptimeMillis();
+        if (radio.write(new byte[]{counter}, 1)) {
+          if (!radio.available()) {
+            log( String.format(Locale.getDefault(),"Got blank response. round trip delay: %d", SystemClock.uptimeMillis() - time));
+          } else {
+            while (radio.available()) {
+              byte[] buffer = radio.read(1);
+              log( String.format(Locale.getDefault(),"Got response %d. round-trip delay %d", buffer[0], SystemClock.uptimeMillis() - time));
+              counter++;
+            }
+          }
+        } else {
+          log( "Sending Failed.");
+        }
+        Thread.sleep(1000);
+      }
+    } catch (Exception e) {
+      log(e.toString());
+
+    }
+  }
+
+  @Background(serial = "RF24")
   void pongBackCallResponse() {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
@@ -293,7 +297,7 @@ public class MainActivity extends Activity {
           Thread.sleep(900);
         } else {
           log( "No available");
-          //        Thread.sleep(1000);
+          Thread.sleep(1000);
         }
         //      radio.flushRx();
         //      radio.flushTx();
@@ -378,7 +382,7 @@ public class MainActivity extends Activity {
         boolean ok = radio.write(buffer, 4);
 
         if (!ok) {
-          Log.e(TAG, "Send Failed");
+          log("Send Failed");
         }
         radio.startListening();
         long started_waiting_at = SystemClock.uptimeMillis();
@@ -390,7 +394,7 @@ public class MainActivity extends Activity {
         }
 
         if (timeout) {
-          Log.e(TAG, "Response timed out");
+          log( "Response timed out");
         } else {
           byte[] got_buffer = radio.read(4);
           long got_time = byteArrayToClong(got_buffer);
@@ -400,6 +404,85 @@ public class MainActivity extends Activity {
 
         Thread.sleep(1000);
 
+      }
+    } catch (Exception e) {
+      log(e.toString());
+    }
+  }
+
+  public static final long[] ack_pipes = { 0xABCDABCD71L, 0x544d52687CL };              // Radio pipe addresses for the 2 nodes to communicate.
+
+
+  @Background(serial = "RF24")
+  void ackPingOut()  {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+      radio.begin();
+      radio.setAutoAck(true);
+      radio.enableAckPayload();
+      radio.setRetries((byte) 0, (byte) 15);
+      radio.setPayloadSize(1);
+
+      radio.openWritingPipe(ack_pipes[0]);
+      radio.openReadingPipe(1, ack_pipes[1]);
+
+      radio.startListening();
+      radio.printDetails();
+
+      byte counter = 1;
+
+      while (!stop) {
+        radio.stopListening();
+        log(String.format(Locale.getDefault(),"Now sending %d as payload.",counter));
+        byte gotByte;
+
+        long time = SystemClock.uptimeMillis();
+
+        boolean ok = radio.write(new byte[]{counter}, 1);
+
+        if (!ok) {
+          log("Send Failed");
+        }else{
+          if(!radio.available()){
+            log("Blank Payload Received");
+          }
+          while (radio.available()) {
+            long tim = SystemClock.uptimeMillis();
+            gotByte = radio.read(1)[0];
+            log(String.format(Locale.getDefault(),"Got response %d, round-trip delay: %d microseconds.",gotByte,tim-time));
+            counter++;
+          }
+        }
+        Thread.sleep(1000);
+      }
+    } catch (Exception e) {
+      log(e.toString());
+    }
+  }
+
+  @Background(serial = "RF24")
+  void ackPongBack()  {
+    stop = false;
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+      radio.begin();
+      radio.setAutoAck(true);
+      radio.enableAckPayload();
+      radio.setRetries((byte) 0, (byte) 15);
+      radio.setPayloadSize(1);
+
+      radio.openWritingPipe(ack_pipes[1]);
+      radio.openReadingPipe(1, ack_pipes[0]);
+
+      radio.startListening();
+      radio.printDetails();
+
+      while (!stop) {
+        int pipe = radio.availablePipe();
+        if(pipe >=0){
+          byte[] got = radio.read(1);
+          radio.writeAckPayload(pipe,got,1);
+          log(String.format(Locale.getDefault(),"Got and Ack'd %d",got[0]));
+        }
       }
     } catch (Exception e) {
       log(e.toString());
@@ -482,13 +565,28 @@ public class MainActivity extends Activity {
     dynPairPong();
   }
 
+  @Click(R.id.buttonAckPingOut)
+  void onClickAckPingOut(){
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.ack_ping_out)));
+    stop = true;
+    ackPingOut();
+  }
+
+  @Click(R.id.buttonAckPongBack)
+  void onClickAckPongBack(){
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.ack_pong_back)));
+    stop = true;
+    ackPongBack();
+  }
+
   @Click(R.id.buttonClearLog)
   void onClickClearLog(){
     editTextLog.setText("");
   }
 
+  @UiThread
   void log(String value){
-    editTextLog.getText().append(value + '\n');
+    editTextLog.getText().append(value).append('\n');
   }
 
 }

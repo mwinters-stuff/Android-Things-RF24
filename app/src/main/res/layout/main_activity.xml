@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewLabelDynamic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -26,7 +26,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/ping_out"
         app:layout_constraintLeft_toLeftOf="@+id/buttonPingOut"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelDynamic"/>
 
     <Button
         android:id="@+id/buttonPPDPongBack"
@@ -46,7 +46,7 @@
         android:layout_marginStart="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelBasic"/>
 
     <Button
         android:id="@+id/buttonPongBack"
@@ -70,7 +70,7 @@
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewLabelCallResponse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -87,7 +87,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/ping_out"
         app:layout_constraintLeft_toLeftOf="@+id/buttonPingOut"
-        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelCallResponse"/>
 
     <Button
         android:id="@+id/buttonCRPongBack"
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toTopOf="@+id/buttonCRPingOut"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewLabelBasic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/getting_started_basic"
@@ -123,7 +123,7 @@
         app:layout_constraintLeft_toRightOf="@+id/buttonPongBack"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelLog"/>
 
     <Button
         android:id="@+id/buttonClearLog"
@@ -136,13 +136,46 @@
         app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewLabelLog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:labelFor="@+id/editTextLog"
         android:text="@string/log"
         app:layout_constraintLeft_toRightOf="@+id/buttonPongBack"
         app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/textViewLabelAck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/ping_pair_ack"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonPingOut"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPPDPingOut"
+        />
+
+    <Button
+        android:id="@+id/buttonAckPingOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/ping_out"
+        app:layout_constraintLeft_toLeftOf="@+id/buttonPingOut"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelAck"/>
+
+    <Button
+        android:id="@+id/buttonAckPongBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/pong_back"
+        app:layout_constraintLeft_toRightOf="@+id/buttonAckPingOut"
+        app:layout_constraintTop_toTopOf="@+id/buttonAckPingOut"/>
 
 </android.support.constraint.ConstraintLayout>
