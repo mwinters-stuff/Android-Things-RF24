@@ -19,6 +19,7 @@ package com.example.androidthings.rf24;
 import android.app.Activity;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
@@ -27,6 +28,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
@@ -71,6 +73,10 @@ public class MainActivity extends Activity {
   String[] pipes_strs = {"1Node", "2Node"};
 
   private static int radioNumber = 0;
+
+  @ViewById(R.id.editTextLog)
+  EditText editTextLog;
+
 
   @AfterViews
   protected void onAfterViews() {
@@ -118,31 +124,32 @@ public class MainActivity extends Activity {
 
       while (!stop) {
         radio.stopListening();
-        Log.d(TAG, String.format("Now sending %d as payload.", counter));
+        log( String.format("Now sending %d as payload.", counter));
         long time = SystemClock.uptimeMillis();
         if (radio.write(new byte[]{counter}, 1)) {
           if (!radio.available()) {
-            Log.d(TAG, String.format("Got blank response. round trip delay: %d", SystemClock.uptimeMillis() - time));
+            log( String.format("Got blank response. round trip delay: %d", SystemClock.uptimeMillis() - time));
           } else {
             while (radio.available()) {
               byte[] buffer = radio.read(1);
-              Log.d(TAG, String.format("Got response %d. round-trip delay %d", buffer[0], SystemClock.uptimeMillis() - time));
+              log( String.format(Locale.getDefault(),"Got response %d. round-trip delay %d", buffer[0], SystemClock.uptimeMillis() - time));
               counter++;
             }
           }
         } else {
-          Log.d(TAG, "Sending Failed.");
+          log( "Sending Failed.");
         }
         Thread.sleep(1000);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
+
     }
   }
 
 
   static final String send_payload_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
-  static long pipes[] = {0xF0F0F0F0E1L, 0xF0F0F0F0D2L};
+  static long[] pipes = {0xF0F0F0F0E1L, 0xF0F0F0F0D2L};
 //  static final byte[][] dyn_pipes = {{(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xE1}, {(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xD2}};
 
   @Background(serial = "RF24")
@@ -161,9 +168,9 @@ public class MainActivity extends Activity {
       radio.printDetails();
       radio.startListening();
 
-      int nextPayloadSize = 4;
+//      int nextPayloadSize = 4;
 
-      byte[] send_payload = send_payload_str.getBytes();
+//      byte[] send_payload = send_payload_str.getBytes();
 
       while (!stop) {
 
@@ -175,12 +182,12 @@ public class MainActivity extends Activity {
             len = radio.getDynamicPayloadSize();
             receive_payload = radio.read(len);
 
-            Log.d(TAG, String.format("Got payload size %d value %s", len, new String(receive_payload)));
+            log( String.format(Locale.getDefault(),"Got payload size %d value %s", len, new String(receive_payload)));
           }
           radio.stopListening();
           if (len > 0) {
             radio.write(receive_payload, len);
-            Log.d(TAG, "Sent Response");
+            log( "Sent Response");
           }
           radio.startListening();
           flipLED();
@@ -189,7 +196,7 @@ public class MainActivity extends Activity {
 
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
     }
   }
 
@@ -213,7 +220,7 @@ public class MainActivity extends Activity {
 
       while (!stop) {
         radio.stopListening();
-        Log.d(TAG, String.format("Now Sending length %d", nextPayloadSize));
+        log( String.format(Locale.getDefault(),"Now Sending length %d", nextPayloadSize));
 
         radio.write(send_payload, nextPayloadSize);
 
@@ -228,15 +235,15 @@ public class MainActivity extends Activity {
         }
 
         if (timeout) {
-          Log.d(TAG, "Failed, response timeout,");
+          log( "Failed, response timeout,");
         } else {
           int len = radio.getDynamicPayloadSize();
           if (len > 0) {
             byte[] receive_payload = radio.read(len);
             // receive_payload[len] = 0;
-            Log.d(TAG, String.format("got response size %d value=%s", len, new String(receive_payload)));
+            log( String.format(Locale.getDefault(),"got response size %d value=%s", len, new String(receive_payload)));
           } else {
-            Log.d(TAG, "Dynamic payload size = 0");
+            log( "Dynamic payload size = 0");
           }
         }
         nextPayloadSize += 1;
@@ -248,7 +255,7 @@ public class MainActivity extends Activity {
 
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
     }
   }
 
@@ -282,10 +289,10 @@ public class MainActivity extends Activity {
           byte[] buffer = radio.read(1);
           buffer[0] += 1;
           radio.writeAckPayload(pipeNo, buffer, 1);
-          Log.d(TAG, String.format("Loaded next response for pipe %d response %d", pipeNo, buffer[0]));
+          log( String.format(Locale.getDefault(),"Loaded next response for pipe %d response %d", pipeNo, buffer[0]));
           Thread.sleep(900);
         } else {
-          Log.d(TAG, "No available");
+          log( "No available");
           //        Thread.sleep(1000);
         }
         //      radio.flushRx();
@@ -293,7 +300,7 @@ public class MainActivity extends Activity {
 
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
     }
 
   }
@@ -329,14 +336,14 @@ public class MainActivity extends Activity {
 
           radio.startListening();
 
-          Log.d(TAG, String.format("Got payload %d...", got_time));
+          log( String.format(Locale.getDefault(),"Got payload %d...", got_time));
 
           Thread.sleep(925);
         }
         //stop = true;
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
     }
   }
 
@@ -361,7 +368,7 @@ public class MainActivity extends Activity {
       radio.startListening();
       while (!stop) {
         radio.stopListening();
-        Log.d(TAG, "Sending...");
+        log( "Sending...");
         long time = SystemClock.uptimeMillis();
         byte[] buffer = longToCByteArray(time);
 //            Longs.toByteArray(time);
@@ -388,20 +395,15 @@ public class MainActivity extends Activity {
           byte[] got_buffer = radio.read(4);
           long got_time = byteArrayToClong(got_buffer);
 
-          Log.d(TAG, String.format("GOT Response %d, sent %d, trip delay %d", got_time, time, SystemClock.uptimeMillis() - time));
+          log( String.format(Locale.getDefault(),"GOT Response %d, sent %d, trip delay %d", got_time, time, SystemClock.uptimeMillis() - time));
         }
 
         Thread.sleep(1000);
 
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log(e.toString());
     }
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
   }
 
   @Override
@@ -414,7 +416,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    Log.d(TAG, "onDestroy");
+
     try {
       ledPinRed.setValue(false);
     } catch (IOException ignore) {
@@ -435,21 +437,58 @@ public class MainActivity extends Activity {
   @Click(R.id.buttonStop)
   void onClickStop() {
     stop = true;
-    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Stopped"));
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.stopped)));
   }
 
   @Click(R.id.buttonPongBack)
   void onClickPongBack() {
     stop = true;
-    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Basic Pong Back"));
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.basic_pong_back)));
     pongBack();
   }
 
   @Click(R.id.buttonPingOut)
   void onClickPingOut() {
     stop = true;
-    setTitle(String.format(Locale.getDefault(), "RF24 Test: %s", "Basic Ping Out"));
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.basic_ping_out)));
     pingOut();
+  }
+
+  @Click(R.id.buttonCRPingOut)
+  void onClickCRPingOut(){
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.call_response_ping_out)));
+    pingOutCallResponse();
+  }
+
+  @Click(R.id.buttonCRPongBack)
+  void onClickCRPongBack(){
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.call_response_pong_back)));
+    pongBackCallResponse();
+  }
+
+  @Click(R.id.buttonPPDPingOut)
+  void onClickPPDPingOut(){
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.dyn_pair_ping_out)));
+    dynPairPing();
+  }
+
+  @Click(R.id.buttonPPDPongBack)
+  void onClickPPDPongBack(){
+    stop = true;
+    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.dyn_pair_pong_back)));
+    dynPairPong();
+  }
+
+  @Click(R.id.buttonClearLog)
+  void onClickClearLog(){
+    editTextLog.setText("");
+  }
+
+  void log(String value){
+    editTextLog.getText().append(value + '\n');
   }
 
 }

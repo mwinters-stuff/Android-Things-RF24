@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RF14 Test</string>
+    <string name="app_name">RF24 Test</string>
+    <string name="basic_ping_out">Basic Ping Out</string>
+    <string name="basic_pong_back">Basic Pong Back</string>
+    <string name="stopped">Stopped</string>
+    <string name="call_response_ping_out">Call Response Ping Out</string>
+    <string name="call_response_pong_back">Call Response Pong Back</string>
+    <string name="dyn_pair_ping_out">Dynamic Pair Ping Out</string>
+    <string name="dyn_pair_pong_back">Dynamic Pair Pong Back</string>
+    <string name="ping_out">Ping Out</string>
+    <string name="ping_pair_dynamic">Ping Pair Dynamic</string>
+    <string name="pong_back">Pong Back</string>
+    <string name="getting_started_basic">Getting Started Basic</string>
+    <string name="stop">Stop</string>
+    <string name="call_response">Call Response</string>
+    <string name="title_plus">RF24 Test: %s</string>
+    <string name="log">Log</string>
+    <string name="clear">Clear</string>
+
 </resources>
