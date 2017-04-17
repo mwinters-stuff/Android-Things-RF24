@@ -28,28 +28,6 @@ public class NativeRF24Network {
   public static final int FLAG_FAST_FRAG = 4;
   public static final int FLAG_NO_POLL = 8;
 
-
-  @SuppressWarnings("WeakerAccess")
-  public class RF24NetworkHeader {
-
-    public int from_node;
-    public int to_node;
-    public int id;
-    public int type;
-    public int reserved;
-    public int next_id;
-
-    RF24NetworkHeader(int to, @IntRange(from = 0, to = 127) int type) {
-      this.to_node = to;
-      this.type = type;
-    }
-
-    RF24NetworkHeader(int to) {
-      this.to_node = to;
-      this.type = 0;
-    }
-  }
-
   public NativeRF24Network() {
     init();
   }

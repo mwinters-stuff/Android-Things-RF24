@@ -418,6 +418,7 @@ public class MainActivity extends Activity {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
       radio.begin();
+
       radio.setAutoAck(true);
       radio.enableAckPayload();
       radio.setRetries((byte) 0, (byte) 15);

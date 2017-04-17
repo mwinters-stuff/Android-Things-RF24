@@ -43,6 +43,7 @@ jobject fromCHeaderToJHeader(JNIEnv *env, jobject jheader, const RF24NetworkHead
 
 }
 
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_nz_org_winters_android_things_RF24_NativeRF24Network_getNetworkFlags(JNIEnv *env,
@@ -73,7 +74,7 @@ Java_nz_org_winters_android_things_RF24_NativeRF24Network_begin__II(JNIEnv *env,
 
 
   if (network) {
-    return network->begin((uint16_t) node_address);
+    return network->begin((uint8_t) channel, (uint16_t) node_address);
   }
 }
 
@@ -112,7 +113,7 @@ Java_nz_org_winters_android_things_RF24_NativeRF24Network_parent(JNIEnv *env, jo
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_nz_org_winters_android_things_RF24_NativeRF24Network_write__Lnz_org_winters_android_things_RF24_NativeRF24Network_RF24NetworkHeader_2Lbyte_3_093_2II(
+Java_nz_org_winters_android_things_RF24_NativeRF24Network_write__Lnz_org_winters_android_things_RF24_RF24NetworkHeader_2Lbyte_3_093_2II(
     JNIEnv *env, jobject instance, jobject header, jbyteArray message_, jint maxLen,
     jint writeDirect) {
   jbyte *message = env->GetByteArrayElements(message_, NULL);
@@ -216,7 +217,7 @@ Java_nz_org_winters_android_things_RF24_NativeRF24Network_multicastLevel(JNIEnv 
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_nz_org_winters_android_things_RF24_NativeRF24Network_write__Lnz_org_winters_android_things_RF24_NativeRF24Network_RF24NetworkHeader_2Lbyte_3_093_2I(
+Java_nz_org_winters_android_things_RF24_NativeRF24Network_write__Lnz_org_winters_android_things_RF24_RF24NetworkHeader_2_3BI(
     JNIEnv *env, jobject instance, jobject header, jbyteArray message_, jint maxLen) {
   jbyte *message = env->GetByteArrayElements(message_, NULL);
   bool rv = false;

@@ -1,11 +1,5 @@
 apply plugin: 'com.android.library'
-
-ext {
-    bintrayName = 'libRF24'
-    libraryName = 'RF24 Lib for Android Things'
-    artifact = "${bintrayName}"
-    libraryDescription = "${libraryName}"
-}
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -59,5 +53,11 @@ dependencies {
 
 }
 
-apply from: '../installv1.gradle'
-apply from: '../bintrayv1.gradle'
+publish {
+    groupId = "${rootProject.ext.publishedGroupId}"
+    artifactId = "${rootProject.ext.artifact}"
+    publishVersion = "${rootProject.ext.libraryVersion}"
+    desc = "${rootProject.ext.libraryDescription}"
+    licences = ['Apache-2.0']
+    website =  "${rootProject.ext.siteUrl}"
+}
