@@ -50,7 +50,7 @@
 #define HIGH 1
 
 #define delay(time) SPI::internalDelay(time)
-#define delayMicroseconds(time) SPI::internalDelay(time)
+#define delayMicroseconds(time) SPI::internalDelayMicroseconds(time)
 #define millis() SPI::internalMillis()
 
 

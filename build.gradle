@@ -10,18 +10,9 @@ ext {
     bintrayRepo = 'maven'
     publishedGroupId = 'nz.org.winters'
     siteUrl = 'https://github.com/wintersandroid/Android-Things-RF24'
-    gitUrl = 'https://github.com/wintersandroid/Android-Things-RF24.git'
-
+    artifact = "libRF24"
+    libraryDescription = "RF24 Lib for Android Things"
     libraryVersion = getTheVersion()
-
-    developerId = 'wintersandroid'
-    developerName = 'Mathew Winters'
-    developerEmail = 'android@winters.org.nz'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
 }
 
 buildscript {
@@ -30,17 +21,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+//        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+//        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        classpath 'com.novoda:bintray-release:0.4.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-    }
-}
-apply plugin: "org.sonarqube"
-sonarqube {
-    properties {
-        property "sonar.exclusions", "**/build/**"
     }
 }
 
