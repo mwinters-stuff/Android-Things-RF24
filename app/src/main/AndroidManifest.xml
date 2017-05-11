@@ -9,8 +9,6 @@
         android:label="@string/app_name"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <uses-library android:name="com.google.android.things"/>
-
         <activity android:name="com.example.androidthings.rf24.MainActivity_">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

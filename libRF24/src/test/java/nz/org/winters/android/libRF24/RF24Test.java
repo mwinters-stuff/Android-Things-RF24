@@ -20,6 +20,8 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.List;
 
+import nz.org.winters.android.things.RF24.NativeRF24;
+
 import static org.junit.Assert.assertEquals;
 
 /**
