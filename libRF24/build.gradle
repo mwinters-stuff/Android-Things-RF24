@@ -41,7 +41,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    provided 'com.google.android.things:androidthings:0.3-devpreview'
+    provided 'com.google.android.things:androidthings:0.4-devpreview'
     compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     compile 'com.google.guava:guava:20.0'
 
