@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
@@ -70,6 +71,7 @@ public class MainActivity extends Activity {
 
   private static final int cePin = 25;
   private static final int spiSpeed = 8000000;
+  private static final int spiBus = 0;
   private Gpio ledPinRed;
 
   boolean stop = false;
@@ -78,7 +80,7 @@ public class MainActivity extends Activity {
   private static int radioNumber = 0;
 
   @ViewById(R.id.editTextLog)
-  EditText editTextLog;
+  TextView editTextLog;
 
 
   @AfterViews
@@ -110,7 +112,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void dynPairPong() {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
 
       radio.begin();
       radio.enableDynamicPayloads();
@@ -159,7 +161,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void dynPairPing() {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
       radio.enableDynamicPayloads();
       radio.setRetries((byte) 5, (byte) 15);
@@ -218,7 +220,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void pingOutCallResponse(){
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
       radio.enableAckPayload();
       radio.enableDynamicPayloads();
@@ -267,7 +269,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void pongBackCallResponse() {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
 
       radio.begin();
       radio.enableAckPayload();
@@ -313,7 +315,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void pongBack() {
     stop = false;
-    try(NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try(NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
       radio.setPALevel(NativeRF24.RF24_PA_LOW);
       //radio.setRetries((byte) 15, (byte) 15);
@@ -354,7 +356,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void pingOut()  {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
 
       radio.setRetries((byte) 15, (byte) 15);
@@ -416,7 +418,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void ackPingOut()  {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
 
       radio.setAutoAck(true);
@@ -439,7 +441,7 @@ public class MainActivity extends Activity {
 
         long time = SystemClock.uptimeMillis();
 
-        boolean ok = radio.write(new byte[]{counter}, 1);
+        boolean ok = radio.write(new byte[]{counter}, 0);
 
         if (!ok) {
           log("Send Failed");
@@ -464,7 +466,7 @@ public class MainActivity extends Activity {
   @Background(serial = "RF24")
   void ackPongBack()  {
     stop = false;
-    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, 1)) {
+    try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
       radio.begin();
       radio.setAutoAck(true);
       radio.enableAckPayload();
@@ -587,7 +589,7 @@ public class MainActivity extends Activity {
 
   @UiThread
   void log(String value){
-    editTextLog.getText().append(value).append('\n');
+    editTextLog.setText(editTextLog.getText() + value + '\n');
   }
 
 }

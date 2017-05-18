@@ -12,7 +12,7 @@
   #include <stddef.h>
 #include <pio/gpio.h>
 
-#include <android/log.h>
+
 
   //#include "bcm2835.h"
   #include "spi.h"
@@ -27,7 +27,8 @@
   #define pgm_read_byte(p) (*(p))
 
 #define  LOG_TAG    "RF24"
-#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+void log_print(const char *tag, const char* format, ...);
+#define  ALOG(...)  log_print(LOG_TAG,__VA_ARGS__)
 
   //typedef uint16_t prog_uint16_t;
   #define PSTR(x) (x)
