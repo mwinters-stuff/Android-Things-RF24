@@ -1,7 +1,6 @@
 #include "spi.h"
 #include <pthread.h>
-#include <unistd.h>
-#include <math.h>
+#include <stdlib.h>
 
 static pthread_mutex_t spiMutex = PTHREAD_MUTEX_INITIALIZER;
 ASpiDevice *SPI::spiDevice;

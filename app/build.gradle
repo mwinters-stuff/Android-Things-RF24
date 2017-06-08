@@ -55,12 +55,17 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
-    provided 'com.google.android.things:androidthings:0.3-devpreview'
-    annotationProcessor "org.androidannotations:androidannotations:4.2.0"
-    compile "org.androidannotations:androidannotations-api:4.2.0"
+    provided 'com.google.android.things:androidthings:0.4-devpreview'
+    annotationProcessor "org.androidannotations:androidannotations:4.3.0"
+    compile "org.androidannotations:androidannotations-api:4.3.0"
     compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
 
     androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
@@ -71,7 +76,7 @@ dependencies {
     testCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     testCompile 'com.android.support.test:runner:0.5'
     testCompile 'com.android.support.test:rules:0.5'
-    testCompile 'org.mockito:mockito-core:2.6.3'
+    testCompile 'org.mockito:mockito-core:2.7.22'
     //testCompile 'org.mockito:mockito-android:2.6.3'
 
 

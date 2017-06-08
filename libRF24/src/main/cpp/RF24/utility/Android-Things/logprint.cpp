@@ -16,7 +16,8 @@ void log_print(const char *tag, const char* format, ...){
   va_start(args,format);
   vsnprintf(buffer,BUFFER_SIZE,format, args);
   va_end(args);
-  if(strchr(buffer,'\n') > 0){
+
+  if(strchr(buffer,'\n') != NULL){
     __android_log_print(ANDROID_LOG_INFO,tag,"%s", bigbuffer);
     bigbuffer[0] = 0;
   }else{
