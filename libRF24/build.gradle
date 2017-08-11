@@ -41,7 +41,7 @@ dependencies {
     androidTestImplementation("com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    provided "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
+    compileOnly "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
     implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     implementation 'com.google.guava:guava:23.0-android'
 

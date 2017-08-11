@@ -65,7 +65,7 @@ android {
 
 dependencies {
     implementation 'com.google.code.findbugs:jsr305:2.0.1'
-    provided "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
+    compileOnly "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
     annotationProcessor "org.androidannotations:androidannotations:${rootProject.ext.annotationsVersion}"
     implementation "org.androidannotations:androidannotations-api:${rootProject.ext.annotationsVersion}"
     implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
