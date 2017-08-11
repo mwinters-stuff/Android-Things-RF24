@@ -38,18 +38,18 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    provided 'com.google.android.things:androidthings:0.4-devpreview'
-    compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
-    compile 'com.google.guava:guava:20.0'
+    provided "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
+    implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    implementation 'com.google.guava:guava:23.0-android'
 
-    testCompile 'junit:junit:4.12'
-    testCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
-    testCompile 'com.android.support.test:runner:0.5'
-    testCompile 'com.android.support.test:rules:0.5'
-    testCompile 'org.mockito:mockito-core:2.7.22'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    testImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
+    testImplementation "com.android.support.test:rules:${rootProject.ext.testRunnerVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
 }
 

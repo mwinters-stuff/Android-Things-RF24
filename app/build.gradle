@@ -18,14 +18,14 @@ apply plugin: 'com.android.application'
 
 //noinspection GroovyMissingReturnStatement
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.1'
 
     defaultConfig {
         applicationId "com.example.androidthings.rf24"
-        minSdkVersion 24
+        minSdkVersion 26
         //noinspection OldTargetApi
-        targetSdkVersion 24
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -63,25 +63,26 @@ android {
 }
 
 dependencies {
-    provided 'com.google.android.things:androidthings:0.4-devpreview'
-    annotationProcessor "org.androidannotations:androidannotations:4.3.0"
-    compile "org.androidannotations:androidannotations-api:4.3.0"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    implementation 'com.google.code.findbugs:jsr305:2.0.1'
+    provided "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
+    annotationProcessor "org.androidannotations:androidannotations:${rootProject.ext.annotationsVersion}"
+    implementation "org.androidannotations:androidannotations-api:${rootProject.ext.annotationsVersion}"
+    implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
 
-    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
+    androidTestImplementation "com.android.support.test:rules:${rootProject.ext.testRunnerVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoVersion}"
 
-    testCompile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
-    testCompile 'com.android.support.test:runner:0.5'
-    testCompile 'com.android.support.test:rules:0.5'
-    testCompile 'org.mockito:mockito-core:2.7.22'
-    //testCompile 'org.mockito:mockito-android:2.6.3'
+    testImplementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    testImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
+    testImplementation "com.android.support.test:rules:${rootProject.ext.testRunnerVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
+    //testCompile "org.mockito:mockito-android:2.6.3"
 
 
     compile project(path: ':libRF24')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 android.applicationVariants.all { variant ->
