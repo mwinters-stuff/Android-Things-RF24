@@ -3,7 +3,7 @@ ext {
     buildToolsVersion = "26.0.1"
     targetSdkVersion = 26
     minSdkVersion = 26
-    supportVersion = "26.0.0-beta1"
+    supportVersion = "26.0.1"
     thingsVersion = "0.5-devpreview"
     espressoVersion = "3.0.0"
     testRunnerVersion = "1.0.0"
@@ -23,7 +23,6 @@ ext {
 
 buildscript {
     repositories {
-        maven {url 'https://maven.google.com'}
         jcenter()
         maven {
             url 'https://maven.google.com'
@@ -39,7 +38,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {url 'https://maven.google.com'}
         jcenter()
         maven {
             url 'https://maven.google.com'
@@ -52,24 +50,24 @@ task clean(type: Delete) {
 }
 
 def static getBuildMajor(){
-    return 0;
+    return 0
 }
 
 def getTheVersion() {
-    def buildMajor = getBuildMajor();
-    def buildNumber = getTheBuildNumber();
+    def buildMajor = getBuildMajor()
+    def buildNumber = getTheBuildNumber()
     if( buildNumber == 0)
     {
-        return "${buildMajor}.${buildNumber}-SNAPSHOT";
+        return "${buildMajor}.${buildNumber}-SNAPSHOT"
 
     }else{
-        return "${buildMajor}.${buildNumber}";
+        return "${buildMajor}.${buildNumber}"
     }
 
 }
 
 def getTheBuildNumber(){
-    return hasProperty('BUILD_NUMBER') ? BUILD_NUMBER.toInteger() : 0;
+    return hasProperty('BUILD_NUMBER') ? BUILD_NUMBER.toInteger() : 0
 }
 
 def getBintrayUser(){
@@ -80,6 +78,6 @@ def getBintrayApiKey(){
     return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '2.4'
+//}

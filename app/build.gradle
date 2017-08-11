@@ -18,16 +18,17 @@ apply plugin: 'com.android.application'
 
 //noinspection GroovyMissingReturnStatement
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.example.androidthings.rf24"
-        minSdkVersion 26
-        //noinspection OldTargetApi
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+
+        versionCode rootProject.ext.buildNumber
+        versionName rootProject.ext.version
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters 'armeabi-v7a','x86'
@@ -82,7 +83,7 @@ dependencies {
     //testCompile "org.mockito:mockito-android:2.6.3"
 
 
-    compile project(path: ':libRF24')
+    implementation project(path: ':libRF24')
 }
 
 android.applicationVariants.all { variant ->
