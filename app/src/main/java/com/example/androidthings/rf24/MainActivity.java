@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
   protected void onAfterViews() {
 
     try {
-      PeripheralManagerService peripheralManagerService = new PeripheralManagerService();
+      PeripheralManager peripheralManagerService = PeripheralManager.getInstance();
 
 
       //cePin = peripheralManagerService.openGpio("BCM22");
