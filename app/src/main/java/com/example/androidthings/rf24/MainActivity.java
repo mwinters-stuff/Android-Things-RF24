@@ -16,12 +16,19 @@
 
 package com.example.androidthings.rf24;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.Display;
 import android.widget.TextView;
 
+import com.fastaccess.permission.base.PermissionHelper;
+import com.fastaccess.permission.base.callback.OnPermissionCallback;
+import com.google.android.things.device.ScreenManager;
+import com.google.android.things.device.TimeManager;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
 
@@ -58,8 +65,9 @@ import nz.org.winters.android.things.RF24.NativeRF24;
  * is available.
  */
 
+@SuppressLint("Registered")
 @EActivity(R.layout.main_activity)
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnPermissionCallback {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   static {
@@ -81,7 +89,28 @@ public class MainActivity extends Activity {
 
   @ViewById(R.id.editTextLog)
   TextView editTextLog;
+  private PermissionHelper permissionHelper;
 
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+
+    permissionHelper = PermissionHelper.getInstance(this, this);
+    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.MODIFY_SCREEN_SETTINGS");
+    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.CHANGE_TIME");
+
+    // for rpi 7 inch touch screen, mounted upside down and a better density.
+    ScreenManager screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY);
+
+    screenManager.setFontScale(1.0f);
+    screenManager.setDisplayDensity(120);
+    screenManager.lockRotation(ScreenManager.ROTATION_180);
+
+    TimeManager timeManager = TimeManager.getInstance();
+    timeManager.setTimeZone("Pacific/Auckland");
+  }
 
   @AfterViews
   protected void onAfterViews() {
@@ -587,9 +616,48 @@ public class MainActivity extends Activity {
     editTextLog.setText("");
   }
 
+  @SuppressLint("SetTextI18n")
   @UiThread
   void log(String value){
     editTextLog.setText(editTextLog.getText() + value + '\n');
+  }
+
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    permissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  }
+
+  @Override
+  public void onPermissionGranted(@NonNull String[] permissionName) {
+    Log.d(TAG, "onPermissionGranted: " + permissionName[0]);
+  }
+
+  @Override
+  public void onPermissionDeclined(@NonNull String[] permissionName) {
+    Log.d(TAG, "onPermissionDeclined: " + permissionName[0]);
+  }
+
+  @Override
+  public void onPermissionPreGranted(@NonNull String permissionsName) {
+    Log.d(TAG, "onPermissionPreGranted: " + permissionsName);
+  }
+
+  @Override
+  public void onPermissionNeedExplanation(@NonNull String permissionName) {
+    Log.d(TAG, "onPermissionNeedExplanation: " + permissionName);
+  }
+
+  @Override
+  public void onPermissionReallyDeclined(@NonNull String permissionName) {
+    Log.d(TAG, "onPermissionReallyDeclined: " + permissionName);
+  }
+
+  @Override
+  public void onNoPermissionNeeded() {
+    Log.d(TAG, "onNoPermissionNeeded");
   }
 
 }

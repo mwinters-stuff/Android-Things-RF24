@@ -70,6 +70,7 @@ dependencies {
     implementation "org.androidannotations:androidannotations-api:${rootProject.ext.annotationsVersion}"
     implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
+    implementation "com.github.k0shk0sh:PermissionHelper:${rootProject.ext.permissionHelperVersion}"
 
     androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     androidTestImplementation "com.android.support.test:runner:${rootProject.ext.testRunnerVersion}"
