@@ -22,12 +22,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.Display;
 import android.widget.TextView;
 
 import com.fastaccess.permission.base.PermissionHelper;
 import com.fastaccess.permission.base.callback.OnPermissionCallback;
-import com.google.android.things.device.ScreenManager;
 import com.google.android.things.device.TimeManager;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
@@ -101,12 +99,12 @@ public class MainActivity extends Activity implements OnPermissionCallback {
     permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.MODIFY_SCREEN_SETTINGS");
     permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.CHANGE_TIME");
 
-    // for rpi 7 inch touch screen, mounted upside down and a better density.
-    ScreenManager screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY);
-
-    screenManager.setFontScale(1.0f);
-    screenManager.setDisplayDensity(120);
-    screenManager.lockRotation(ScreenManager.ROTATION_180);
+//    // for rpi 7 inch touch screen, mounted upside down and a better density.
+//    ScreenManager screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY);
+//
+//    screenManager.setFontScale(1.0f);
+//    screenManager.setDisplayDensity(120);
+//    screenManager.lockRotation(ScreenManager.ROTATION_180);
 
     TimeManager timeManager = TimeManager.getInstance();
     timeManager.setTimeZone("Pacific/Auckland");

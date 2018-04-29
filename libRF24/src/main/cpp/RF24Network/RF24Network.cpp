@@ -1202,11 +1202,11 @@ bool RF24Network::is_valid_address( uint16_t node )
 
   while(node)
   {
-    uint8_t digit = node & 0x07;
+    uint8_t digit = (uint8_t)(node & 0x07);
 	#if !defined (RF24NetworkMulticast)
     if (digit < 1 || digit > 5)
 	#else
-	if (digit < 0 || digit > 5)	//Allow our out of range multicast address
+	if (digit > 5)	//Allow our out of range multicast address
 	#endif
     {
       result = false;

@@ -23,8 +23,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.androidthings.rf24"
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.sdkVersion
+        minSdkVersion rootProject.ext.sdkVersion
 
         versionCode rootProject.ext.buildNumber
         versionName rootProject.ext.version

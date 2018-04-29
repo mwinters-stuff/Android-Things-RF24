@@ -4,6 +4,8 @@
           package="com.example.androidthings.rf24">
     <uses-permission android:name="com.google.android.things.permission.MODIFY_SCREEN_SETTINGS"/>
     <uses-permission android:name="com.google.android.things.permission.CHANGE_TIME"/>
+    <uses-permission android:name="com.google.android.things.permission.SET_TIME"/>
+
 
     <application
         android:allowBackup="true"
@@ -11,7 +13,8 @@
         android:label="@string/app_name"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="com.example.androidthings.rf24.MainActivity_">
+        <activity android:name="com.example.androidthings.rf24.MainActivity_"
+                  android:screenOrientation="reverseLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -21,7 +24,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.IOT_LAUNCHER"/>
+                <category android:name="android.intent.category.HOME"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

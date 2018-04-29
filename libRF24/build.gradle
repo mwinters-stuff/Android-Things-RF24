@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.sdkVersion
+        minSdkVersion rootProject.ext.sdkVersion
 
         versionCode rootProject.ext.buildNumber
         versionName rootProject.ext.version
@@ -53,11 +52,4 @@ dependencies {
 
 }
 
-publish {
-    groupId = "${rootProject.ext.publishedGroupId}"
-    artifactId = "${rootProject.ext.artifact}"
-    publishVersion = "${rootProject.ext.libraryVersion}"
-    desc = "${rootProject.ext.libraryDescription}"
-    licences = ['Apache-2.0']
-    website =  "${rootProject.ext.siteUrl}"
-}
+apply from: 'publish.gradle'
