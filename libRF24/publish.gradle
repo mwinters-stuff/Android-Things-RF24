@@ -44,7 +44,7 @@ bintray {
         publicDownloadNumbers = true
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/wintersandroid/Android-Things-RF24.git'
-        dryRun = true
+//        dryRun = true
         version {
             name = this.version
             desc = "Android-Things-RF24 ${this.version}"
