@@ -31,8 +31,8 @@ publishing {
 }
 
 bintray {
-    user = project.hasProperty('BINTRAY_USER') ?: System.getenv('BINTRAY_USER')
-    key = project.hasProperty('BINTRAY_KEY') ?: System.getenv('BINTRAY_API_KEY')
+    user = project.hasProperty('BINTRAY_USER') ? project.property('BINTRAY_USER') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('BINTRAY_KEY') ? project.property('BINTRAY_KEY') : System.getenv('BINTRAY_API_KEY')
     publications = ['Production']
     configurations = ['archives']
     override = true
