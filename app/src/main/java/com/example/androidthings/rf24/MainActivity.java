@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -29,14 +30,6 @@ import com.fastaccess.permission.base.callback.OnPermissionCallback;
 import com.google.android.things.device.TimeManager;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -63,17 +56,12 @@ import nz.org.winters.android.things.RF24.NativeRF24;
  * is available.
  */
 
-@SuppressLint("Registered")
-@EActivity(R.layout.main_activity)
 public class MainActivity extends Activity implements OnPermissionCallback {
   private static final String TAG = MainActivity.class.getSimpleName();
 
   static {
     System.loadLibrary("native-lib");
   }
-
-  @Pref
-  AppPrefs_ appPrefs;
 
   private static final int cePin = 25;
   private static final int spiSpeed = 8000000;
@@ -85,7 +73,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
 
   private static int radioNumber = 0;
 
-  @ViewById(R.id.editTextLog)
+//  @ViewById(R.id.editTextLog)
   TextView editTextLog;
   private PermissionHelper permissionHelper;
 
@@ -93,25 +81,17 @@ public class MainActivity extends Activity implements OnPermissionCallback {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.main_activity);
 
 
-    permissionHelper = PermissionHelper.getInstance(this, this);
-    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.MODIFY_SCREEN_SETTINGS");
-    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.CHANGE_TIME");
-
-//    // for rpi 7 inch touch screen, mounted upside down and a better density.
-//    ScreenManager screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY);
-//
-//    screenManager.setFontScale(1.0f);
-//    screenManager.setDisplayDensity(120);
-//    screenManager.lockRotation(ScreenManager.ROTATION_180);
+//    permissionHelper = PermissionHelper.getInstance(this, this);
+//    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.MODIFY_SCREEN_SETTINGS");
+//    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.CHANGE_TIME");
 
     TimeManager timeManager = TimeManager.getInstance();
     timeManager.setTimeZone("Pacific/Auckland");
-  }
 
-  @AfterViews
-  protected void onAfterViews() {
+    editTextLog = findViewById(R.id.editTextLog);
 
     try {
       PeripheralManager peripheralManagerService = PeripheralManager.getInstance();
@@ -127,6 +107,8 @@ public class MainActivity extends Activity implements OnPermissionCallback {
     } catch (Exception e) { // NOSONAR
       Log.d("ERROR", "Exception: " + e.getMessage());
     }
+
+    connectButtons();
   }
 
 
@@ -134,9 +116,9 @@ public class MainActivity extends Activity implements OnPermissionCallback {
 
   static final String send_payload_str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ789012";
   static long[] pipes = {0xF0F0F0F0E1L, 0xF0F0F0F0D2L};
-//  static final byte[][] dyn_pipes = {{(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xE1}, {(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xD2}};
+  static final byte[][] dyn_pipes = {{(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xE1}, {(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xF0,(byte)0xD2}};
 
-  @Background(serial = "RF24")
+  @WorkerThread
   void dynPairPong() {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -185,7 +167,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
   }
 
 
-  @Background(serial = "RF24")
+@WorkerThread
   void dynPairPing() {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -244,7 +226,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
   }
 
 
-  @Background(serial = "RF24")
+  @WorkerThread
   void pingOutCallResponse(){
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -293,7 +275,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
     }
   }
 
-  @Background(serial = "RF24")
+  @WorkerThread
   void pongBackCallResponse() {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -339,7 +321,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
   }
 
 
-  @Background(serial = "RF24")
+  @WorkerThread
   void pongBack() {
     stop = false;
     try(NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -380,7 +362,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
     }
   }
 
-  @Background(serial = "RF24")
+  @WorkerThread
   void pingOut()  {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -441,8 +423,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
 
   public static final long[] ack_pipes = { 0xABCDABCD71L, 0x544d52687CL };              // Radio pipe addresses for the 2 nodes to communicate.
 
-
-  @Background(serial = "RF24")
+  @WorkerThread
   void ackPingOut()  {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -489,8 +470,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
       log(e.toString());
     }
   }
-
-  @Background(serial = "RF24")
+  @WorkerThread
   void ackPongBack()  {
     stop = false;
     try (NativeRF24 radio = new NativeRF24(cePin, spiSpeed, spiBus)) {
@@ -518,7 +498,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
       log(e.toString());
     }
   }
-
+//
   @Override
   public void onPause() {
     stop = true;
@@ -547,77 +527,70 @@ public class MainActivity extends Activity implements OnPermissionCallback {
 
   public native long byteArrayToClong(byte[] array);
 
-  @Click(R.id.buttonStop)
-  void onClickStop() {
-    stop = true;
-    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.stopped)));
-  }
+  void connectButtons() {
+    findViewById(R.id.buttonStop).setOnClickListener(v -> {
+      stop = true;
+      setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.stopped)));
+    });
 
-  @Click(R.id.buttonPongBack)
-  void onClickPongBack() {
-    stop = true;
-    setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.basic_pong_back)));
-    pongBack();
-  }
+    findViewById(R.id.buttonPongBack).setOnClickListener(v -> {
+      stop = true;
+      setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.basic_pong_back)));
+      new Thread(this::pongBack).start();
+    });
 
-  @Click(R.id.buttonPingOut)
-  void onClickPingOut() {
+    findViewById(R.id.buttonPingOut).setOnClickListener(v -> {
     stop = true;
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.basic_ping_out)));
-    pingOut();
-  }
+      new Thread(this::pingOut).start();
+    });
 
-  @Click(R.id.buttonCRPingOut)
-  void onClickCRPingOut(){
+    findViewById(R.id.buttonCRPingOut).setOnClickListener(v -> {
     stop = true;
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.call_response_ping_out)));
-    pingOutCallResponse();
-  }
+      new Thread(this::pingOutCallResponse).start();
+    });
 
-  @Click(R.id.buttonCRPongBack)
-  void onClickCRPongBack(){
+    findViewById(R.id.buttonCRPongBack).setOnClickListener(v -> {
     stop = true;
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.call_response_pong_back)));
-    pongBackCallResponse();
-  }
+      new Thread(this::pongBackCallResponse).start();
+    });
 
-  @Click(R.id.buttonPPDPingOut)
-  void onClickPPDPingOut(){
+    findViewById(R.id.buttonPPDPingOut).setOnClickListener(v -> {
     stop = true;
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.dyn_pair_ping_out)));
-    dynPairPing();
-  }
+      new Thread(this::dynPairPing).start();
+    });
 
-  @Click(R.id.buttonPPDPongBack)
-  void onClickPPDPongBack(){
+    findViewById(R.id.buttonPPDPongBack).setOnClickListener(v -> {
     stop = true;
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.dyn_pair_pong_back)));
-    dynPairPong();
-  }
+      new Thread(this::dynPairPong).start();
+    });
 
-  @Click(R.id.buttonAckPingOut)
-  void onClickAckPingOut(){
+    findViewById(R.id.buttonAckPingOut).setOnClickListener(v -> {
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.ack_ping_out)));
     stop = true;
-    ackPingOut();
-  }
+      new Thread(this::ackPingOut).start();
+    });
 
-  @Click(R.id.buttonAckPongBack)
-  void onClickAckPongBack(){
+    findViewById(R.id.buttonAckPongBack).setOnClickListener(v -> {
     setTitle(String.format(Locale.getDefault(), getString(R.string.title_plus), getString(R.string.ack_pong_back)));
     stop = true;
-    ackPongBack();
+      new Thread(this::ackPongBack).start();
+    });
+
+    findViewById(R.id.buttonClearLog).setOnClickListener(v -> {
+      editTextLog.setText("");
+    });
   }
 
-  @Click(R.id.buttonClearLog)
-  void onClickClearLog(){
-    editTextLog.setText("");
-  }
 
   @SuppressLint("SetTextI18n")
-  @UiThread
+  @WorkerThread
   void log(String value){
-    editTextLog.setText(editTextLog.getText() + value + '\n');
+    runOnUiThread(() -> editTextLog.setText(editTextLog.getText() + value + '\n'));
   }
 
 

@@ -56,7 +56,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     dexOptions {
         preDexLibraries = false
         javaMaxHeapSize "4g"
@@ -66,8 +69,6 @@ android {
 dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.1'
     compileOnly "com.google.android.things:androidthings:${rootProject.ext.thingsVersion}"
-    annotationProcessor "org.androidannotations:androidannotations:${rootProject.ext.annotationsVersion}"
-    implementation "org.androidannotations:androidannotations-api:${rootProject.ext.annotationsVersion}"
     implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
     implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
     implementation "com.github.k0shk0sh:PermissionHelper:${rootProject.ext.permissionHelperVersion}"
@@ -85,10 +86,4 @@ dependencies {
 
 
     implementation project(path: ':libRF24')
-}
-
-android.applicationVariants.all { variant ->
-    variant.variantData.variantConfiguration.javaCompileOptions.annotationProcessorOptions
-            .arguments = ['androidManifestFile': variant.outputs[0]?.processResources?.manifestFile?.absolutePath]
-
 }

@@ -3,7 +3,7 @@ ext {
     buildToolsVersion = "27.0.3"
     //noinspection GradleIdeError
     sdkVersion = 27
-    supportVersion = "27.1.0"
+    supportVersion = "27.1.1"
     thingsVersion = "0.8-devpreview"
     espressoVersion = "3.0.0"
     testRunnerVersion = "1.0.0"
@@ -13,26 +13,15 @@ ext {
     permissionHelperVersion = "1.1.0"
     version = getTheVersion()
     buildNumber = getTheBuildNumber()
-//
-//    bintrayRepo = 'maven'
-//    publishedGroupId = 'nz.org.winters'
-//    siteUrl = 'https://github.com/wintersandroid/Android-Things-RF24'
-//    artifact = "libRF24"
-//    libraryDescription = "RF24 Lib for Android Things"
-//    libraryVersion = getTheVersion()
 }
 
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com'
-        }
         google()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha12'
-//        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha13'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -41,11 +30,8 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
-        maven {
-            url 'https://maven.google.com'
-        }
+        jcenter()
     }
 }
 
@@ -74,14 +60,3 @@ def getTheBuildNumber(){
     return hasProperty('BUILD_NUMBER') ? BUILD_NUMBER.toInteger() : 0
 }
 
-//def getBintrayUser(){
-//    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
-//}
-//
-//def getBintrayApiKey(){
-//    return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
-//}
-
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '2.4'
-//}
