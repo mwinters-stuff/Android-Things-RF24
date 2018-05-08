@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements OnPermissionCallback {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main_activity);
-
+//adb shell wm density 120
 
 //    permissionHelper = PermissionHelper.getInstance(this, this);
 //    permissionHelper.setForceAccepting(true).request("com.google.android.things.permission.MODIFY_SCREEN_SETTINGS");

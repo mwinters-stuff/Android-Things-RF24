@@ -13,8 +13,7 @@
         android:label="@string/app_name"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="com.example.androidthings.rf24.MainActivity"
-                  android:screenOrientation="reverseLandscape">
+        <activity android:name="com.example.androidthings.rf24.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
