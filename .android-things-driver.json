@@ -1,0 +1,15 @@
+{
+    "title": "nRF24L01",
+    "category": "2.4 GHz wireless transmitter",
+    "published-maven": {
+        "maven-url": "https://jitpack.io",
+        "groupid": "com.github.wintersandroid",
+        "artifactid": "Android-Things-RF24"
+    },
+    "compatible-with": [
+        {
+            "title": "nRF24L01",
+            "url": "https://www.nordicsemi.com/eng/Products/2.4GHz-RF/nRF24L01"
+        }
+    ]
+}
